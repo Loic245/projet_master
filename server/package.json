@@ -12,7 +12,11 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "jspdf": "^2.5.1",
+    "moment": "^2.29.4",
     "mongod": "^2.0.0",
-    "mongoose": "^6.8.4"
+    "mongoose": "^6.8.4",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.0"
   }
 }
