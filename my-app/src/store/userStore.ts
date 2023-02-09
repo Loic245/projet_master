@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { action, makeObservable, observable } from 'mobx';
 import config from '../config';
-import { IUser } from '../common/Interfaces';
+import { IAdmin, IEtudiant, IProfessor, IUser } from '../common/Interfaces';
 
 export interface UserStoreInterface {
-    allUser: any;
+    allUser: Array<IUser>;
+    allAdmin: Array<IAdmin>;
+    allEtudiant:  Array<IEtudiant>;
+    allProfessor: Array<IProfessor>;
     isLoading: boolean;
     getAllUser: () => void;
     createUser: (data: IUser) => void;
@@ -14,7 +17,13 @@ export interface UserStoreInterface {
 
 class UserStore implements UserStoreInterface {
 
-    @observable allUser = "";
+    @observable allUser: IUser | any = [];
+
+    @observable allAdmin: IAdmin | any = [];
+
+    @observable allEtudiant: IEtudiant | any = [];
+
+    @observable allProfessor: IProfessor | any = [];
 
     @observable isLoading: boolean = false;
 
@@ -26,8 +35,10 @@ class UserStore implements UserStoreInterface {
         this.isLoading = true;
         try {
             const result = await axios.get(`${config.baseURL}/user`)
-
             this.allUser = result.data.user;
+            this.allAdmin = result.data.admin;
+            this.allEtudiant = result.data.etudiant;
+            this.allProfessor = result.data.professor;
         }
         catch (e: any) {
             console.log("Error on getting all user !")
