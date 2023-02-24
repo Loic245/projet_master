@@ -1,6 +1,22 @@
 import mongoose, { Schema, Document, Mongoose } from 'mongoose';
 import { IEtudiant } from '../common/interface';
 
+
+const LyceeSchema: Schema = new Schema ({
+    serieBacc: {
+        type: String,
+        required: false
+    },
+    nomLycee: {
+        type: String,
+        required: true
+    },
+    TechG: {
+        type: String,
+        required: true
+    }
+})
+
 const StudentSchema: Schema = new Schema({
     nomEtu: {
         type: String,
@@ -31,13 +47,12 @@ const StudentSchema: Schema = new Schema({
         required: true,
     },
     lycee: {
-        type: mongoose.Schema.Types.Mixed,
-        required: true,
+        type: LyceeSchema
     },
     createdAt: {
         type: Date,
         default: new Date(),
-        required: true,
+        required: false,
     },
 });
 

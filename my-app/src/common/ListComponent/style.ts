@@ -8,6 +8,11 @@ const useStyles = makeStyles({
       "& .MuiDataGrid-root": {
         border: "unset",
       },
+    },
+    resultatVide: {
+      display: 'flex',
+      justifyContent: 'center',
+      marginTop: '10rem'
     }
   
   });

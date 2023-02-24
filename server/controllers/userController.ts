@@ -47,6 +47,36 @@ export default class UserController {
         }
     }
 
+    static createAdmin = async(req: Request, res: Response) => {
+        try {
+            const result = await Admin.create(req.body)
+
+            res.status(200).send(result)
+        } catch (e: any) {
+            res.status(500).send({message: "error on grabind data !", error : e})
+        }
+    }
+
+    static createProf = async(req: Request, res: Response) => {
+        try {
+            const result = await Professor.create(req.body)
+
+            res.status(200).send(result)
+        } catch (e: any) {
+            res.status(500).send({message: "error on grabind data !", error : e})
+        }
+    }
+
+    static createStudent = async(req: Request, res: Response) => {
+        try {
+            const result = await Etudiant.create(req.body)
+
+            res.status(200).send(result)
+        }catch (e: any) {
+            return res.status(500).send({message: "error on creating student !", error : e})
+        }
+    } 
+
     static updateUser = async(req: Request, res: Response) => {
         const id = req.params;
         const { payload } = req.body;

@@ -38,7 +38,7 @@ const ProfessorSchema: Schema = new Schema({
     createdAt: {
         type: Date,
         default: new Date(),
-        required: true,
+        required: false,
     },
 });
 

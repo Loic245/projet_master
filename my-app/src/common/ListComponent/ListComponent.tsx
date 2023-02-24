@@ -17,14 +17,18 @@ const ListComponent = (props: any) => {
   return (
     <Box className={classes.dataGrid}>
       <SearchComponent createNew={createNew} handleSearch={handleSearch} />
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        sortingOrder={["desc", "asc"]}
-        getRowId={(row: any) => row.id || row._id}
-      />
+      {rows.length === 0 ? (
+        <div className={classes.resultatVide}>Pas de résultat !</div>
+      ) : (
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          sortingOrder={["desc", "asc"]}
+          getRowId={(row: any) => row.id || row._id}
+        />
+      )}
     </Box>
   );
 };

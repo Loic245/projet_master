@@ -6,9 +6,12 @@ import TabPanel from "../../common/TabPanel";
 import { a11yProps } from "../../common/utils/function";
 import ListComponent from "../../common/ListComponent";
 import { useEffect, useState } from "react";
-import { columns } from "./tableinfo";
-import { columnsAllUsers } from "./tableinfo";
-
+import {
+  columnsAllUsers,
+  columnAdmin,
+  columnProf,
+  columnStudent,
+} from "./tableinfo";
 interface IAccueil {
   userStore: UserStoreInterface;
 }
@@ -22,55 +25,43 @@ const Acceuil = (props: any) => {
 
   const history = useNavigate();
 
-  const [tabValue, setTabsValue] = useState(0);
-
   const handleOpenTabs = (event: any, value: any) => {
-    setTabsValue(value);
+    userStore.setTabsValue(value);
   };
 
-  const rows = [
-    { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-    { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-    { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-    { id: 4, lastName: "Stark", firstName: "Arya", age: 16 },
-    { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-    { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-    { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-    { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-    { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  ];
+  const handleSearch = (param: string) => () => {
+    if (param === "admin") {
+      console.log("admin");
+    }
 
-  console.log("data professor :", userStore?.allProfessor);
+    if (param === "student") {
+      console.log("etudiant");
+    }
 
-  const handleSearchAllUser = () => {
-    console.log("allUser function search");
+    if (param === "prof") {
+      console.log("professor");
+    }
   };
 
-  const createNewUSer = () => {
-    console.log("createnew user function");
-  };
+  const handleCreate = (param: string) => () => {
+    if (param === "admin") {
+      history("/users/createAdmin");
+    }
 
-  const handleSearchAllProfessor = () => {
-    console.log("allProfessor function search");
-  };
+    if (param === "student") {
+      history("/users/createStudent");
+    }
 
-  const handleSearchAllEtudiant = () => {
-    console.log("allEtudiant function search");
-  };
-
-  const createNewEtudiant = () => {
-    console.log("createnew etudiant function");
-  };
-
-  const handleSearchAllAdmin = () => {
-    console.log("allAdmin function search");
+    if (param === "prof") {
+      history("/users/createProf");
+    }
   };
 
   return (
     <Box>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
-          value={tabValue}
+          value={userStore?.tabsValue}
           onChange={handleOpenTabs}
           aria-label="basic tabs example"
         >
@@ -79,31 +70,28 @@ const Acceuil = (props: any) => {
           <Tab label="Etudiants" {...a11yProps(2)} />
         </Tabs>
       </Box>
-      <TabPanel value={tabValue} index={0}>
-        {userStore?.allUser?.length > 0 ? (
-          <ListComponent
-            rows={userStore?.allUser}
-            columns={columnsAllUsers}
-            handleSearch={handleSearchAllUser}
-            createNew={createNewUSer}
-          />
-        ) : (
-          <div>Pas de résultat</div>
-        )}
-      </TabPanel>
-      <TabPanel value={tabValue} index={1}>
-        {userStore?.allProfessor?.length > 0 ? (
-          <ListComponent rows={rows} columns={columns} />
-        ) : (
-          <div>Pas de résultat</div>
-        )}
-      </TabPanel>
-      <TabPanel value={tabValue} index={2}>
+      <TabPanel value={userStore?.tabsValue} index={0}>
         <ListComponent
-          rows={rows}
-          columns={columns}
-          handleSearch={handleSearchAllEtudiant}
-          createNew={createNewEtudiant}
+          rows={userStore?.allAdmin}
+          columns={columnAdmin}
+          handleSearch={handleSearch("admin")}
+          createNew={handleCreate("admin")}
+        />
+      </TabPanel>
+      <TabPanel value={userStore?.tabsValue} index={1}>
+        <ListComponent
+          rows={userStore?.allProfessor}
+          columns={columnProf}
+          handleSearch={handleSearch("prof")}
+          createNew={handleCreate("prof")}
+        />
+      </TabPanel>
+      <TabPanel value={userStore?.tabsValue} index={2}>
+        <ListComponent
+          rows={userStore?.allEtudiant}
+          columns={columnStudent}
+          handleSearch={handleSearch("student")}
+          createNew={handleCreate("student")}
         />
       </TabPanel>
     </Box>

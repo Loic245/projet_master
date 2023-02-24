@@ -4,3 +4,5 @@ export const a11yProps = (index: number) => {
       'aria-controls': `scrollable-auto-tabpanel-${index}`,
     };
   };
+
+export type SnackBarSeverity = 'success' | 'warning' | 'info' | 'error';

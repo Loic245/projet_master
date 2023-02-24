@@ -2,6 +2,8 @@ import axios from 'axios';
 import { action, makeObservable, observable } from 'mobx';
 import config from '../config';
 import { IAdmin, IEtudiant, IProfessor, IUser } from '../common/Interfaces';
+import SnackBarComponent from '../common/SnackBar';
+import rootStore from './rootStore';
 
 export interface UserStoreInterface {
     allUser: Array<IUser>;
@@ -11,8 +13,13 @@ export interface UserStoreInterface {
     isLoading: boolean;
     getAllUser: () => void;
     createUser: (data: IUser) => void;
+    createAdmin: (data: IAdmin) => void;
+    createProf: (data: IProfessor) => void;
+    createStudent: (data: IEtudiant) => void;
     updateUser: (data: IUser | any) => void;
     deleteUSer: (id: string) => void;
+    tabsValue: number;
+    setTabsValue : (data: number) => void;
 }
 
 class UserStore implements UserStoreInterface {
@@ -27,8 +34,14 @@ class UserStore implements UserStoreInterface {
 
     @observable isLoading: boolean = false;
 
+    @observable tabsValue = 0;
+
     constructor() {
         makeObservable(this);
+    }
+
+    @action setTabsValue = (data: number) => {
+        this.tabsValue = data;
     }
 
     @action getAllUser = async() => {
@@ -56,9 +69,68 @@ class UserStore implements UserStoreInterface {
             if(result.data){
                 console.log("success !")
             }
-        }
-        catch (e: any) {
+
+            await rootStore.setSnackBar(true, 'success', 'Opération réussie avec succès !');
+        } catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
             console.log("Error on creating a user !")
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action createAdmin = async(data: IAdmin) => {
+        this.isLoading = true;
+        try {
+            const result = await axios.post(`${config.baseURL}/user/admin`, data)
+
+            if(result.data){
+                this.allAdmin = result.data
+            }
+            this.setTabsValue(0)
+
+            await rootStore.setSnackBar(true, 'success', 'Opération réussie avec succès !');
+        } catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
+            console.log("Error on creating admin user !")
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action createProf = async(data: IProfessor) => {
+        this.isLoading = true;
+        try {
+            const result = await axios.post(`${config.baseURL}/user/prof`, {...data})
+
+            if(result.data){
+                this.allProfessor = result.data
+            }
+            this.setTabsValue(1)
+
+            await rootStore.setSnackBar(true, 'success', 'Opération réussie avec succès !');
+        } catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
+            console.log("Error on creating professor user !")
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action createStudent = async(data: IEtudiant) => {
+        this.isLoading = true;
+        try{
+            const result = await axios.post(`${config.baseURL}/user/student`, data)
+
+            if(result.data) {
+                this.allEtudiant = result.data
+            }
+            this.setTabsValue(2)
+
+            await rootStore.setSnackBar(true, 'success', 'Opération réussie avec succès !');
+        } catch(e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
+            console.log("Error on creating student user !")
         } finally {
             this.isLoading = false;
         }

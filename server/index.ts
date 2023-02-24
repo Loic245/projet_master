@@ -2,12 +2,10 @@ import mongoose from "mongoose";
 import express from "express";
 import routes from "./routes";
 import { baseURI } from "./utils";
-import { User } from "./entity/user";
 let cors = require("cors")
 
 
 const app = express()
-app.use(cors());
 
 // const newUser = {
 //   nom: "Rakoto",
@@ -27,7 +25,8 @@ app.use(cors());
 
 // createUser();
 
-mongoose.connect(`${baseURI}`).then(() => {
+mongoose.connect(`${baseURI}`)
+.then(() => {
     console.log("MongoDB Connected !");
   })
   .catch((err) => console.log(err));  
@@ -39,3 +38,6 @@ app.listen(3009, () => {
 app.use(cors());
 
 app.use("/", routes)
+
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb' }));

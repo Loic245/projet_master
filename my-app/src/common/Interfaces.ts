@@ -4,43 +4,43 @@ export interface IUser {
     password: string;
     sexe: string;
     role: string;
-    createdAt: Date | any;
+    createdAt?: Date | any;
 }
 
 export interface IProfessor {
     nomProf: string;
     prenomProf: string;
     adresseProf: string;
-    CIN: Number;
+    CIN: Number | any;
     birthday: Date | any;
     placeOfBirth: string;
     sexe: string;
-    matiere: string[];
-    createdAt: Date;
+    matiere?: string[];
+    createdAt?: Date;
 }
 
 export interface IAdmin {
     nomAdmin: string;
     prenomAdmin: string;
     adresseAdmin: string;
-    CIN: Number;
+    CIN: Number | any;
     birthday: Date | any;
     placeOfBirth: string;
     sexe: string;
     poste: string;
-    createdAt: Date;
+    createdAt?: Date;
 }
 
 export interface IEtudiant {
     nomEtu: string;
     prenomEtu: string;
     adresseEtu: string;
-    CIN: Number;
+    CIN: Number | any;
     birthday: Date | any;
     placeOfBirth: string;
     sexe: string;
     lycee: ILycee;
-    createdAt: Date;
+    createdAt?: Date;
 }
 
 export interface IRole {

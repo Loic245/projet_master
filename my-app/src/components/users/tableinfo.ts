@@ -1,34 +1,5 @@
-import { GridColDef } from "@mui/x-data-grid";
-
-export const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "firstName",
-      headerName: "First name",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "lastName",
-      headerName: "Last name",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      width: 110,
-      editable: true,
-    },
-    {
-      field: "fullName",
-      headerName: "Full name",
-      description: "This column has a value getter and is not sortable.",
-      sortable: false,
-      width: 160,
-    },
-  ];
+import { GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import moment from 'moment'
 
   export const columnsAllUsers = [
         {
@@ -61,4 +32,181 @@ export const columns: GridColDef[] = [
             headerName: "Sexe",
             width: 150,
         },
+  ]
+
+  export const columnAdmin = [
+    {
+      id: 0,
+      field: "nomAdmin",
+      headerName: "Nom",
+      width: 150,
+    },
+    {
+      id: 1,
+      field: "prenomAdmin",
+      headerName: "Prénom",
+      width: 150,
+    },
+    {
+      id: 2,
+      field: "adresseAdmin",
+      headerName: "Adresse",
+      width: 150,
+    },
+    {
+      id: 3,
+      field: "CIN",
+      headerName: "CIN",
+      width: 150,
+    },
+    {
+      id: 4,
+      field: "birthday",
+      headerName: "Date de naissance",
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+      `${moment(params.row.birthday).format("DD/MM/YYYY") }`,
+    },
+    {
+      id: 5,
+      field: "placeOfBirth",
+      headerName: "Lieu de naissance",
+      width: 150,
+    },
+    {
+      id: 6,
+      field: "sexe",
+      headerName: "Sexe",
+      width: 150,
+    },
+    {
+      id: 7,
+      field: "poste",
+      headerName: "Poste",
+      width: 150,
+    },
+  ]
+
+  export const columnProf = [
+    {
+      id: 0,
+      field: "nomProf",
+      headerName: "Nom",
+      width: 150,
+    },
+    {
+      id: 1,
+      field: "prenomProf",
+      headerName: "Prénom",
+      width: 150,
+    },
+    {
+      id: 1,
+      field: "adresseProf",
+      headerName: "Adresse",
+      width: 150,
+    },
+    {
+      id: 1,
+      field: "CIN",
+      headerName: "CIN",
+      width: 150,
+    },
+    {
+      id: 1,
+      field: "birthday",
+      headerName: "Date de naissance",
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+      `${moment(params.row.birthday).format("DD/MM/YYYY") }`,
+    },
+    {
+      id: 1,
+      field: "placeOfBirth",
+      headerName: "Lieu de naissance",
+      width: 150,
+    },
+    {
+      id: 1,
+      field: "sexe",
+      headerName: "Sexe",
+      width: 150,
+    },
+    {
+      id: 1,
+      field: "matiere",
+      headerName: "Matiere",
+      width: 150,
+    },
+  ]
+
+  export const columnStudent = [
+    {
+      id: 0,
+      field: "nomEtu",
+      headerName: "Nom",
+      width: 150,
+    },
+    {
+      id: 1,
+      field: "prenomEtu",
+      headerName: "Prénom",
+      width: 150,
+    },
+    {
+      id: 2,
+      field: "adresseEtu",
+      headerName: "Adresse",
+      width: 150,
+    },
+    {
+      id: 3,
+      field: "CIN",
+      headerName: "CIN",
+      width: 150,
+    },
+    {
+      id: 4,
+      field: "birthday",
+      headerName: "Date de naissance",
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+      `${moment(params.row.birthday).format("DD/MM/YYYY") }`,
+    },
+    {
+      id: 5,
+      field: "placeOfBirth",
+      headerName: "Lieu de naissance",
+      width: 150,
+    },
+    {
+      id: 6,
+      field: "sexe",
+      headerName: "Sexe",
+      width: 150,
+    },
+    {
+      id: 7,
+      field: "nomLycee",
+      headerName: "Lycée",
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+      `${params.row.lycee.nomLycee }`,
+    },
+    {
+      id: 8,
+      field: "TechG",
+      headerName: "Options",
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+      `${params.row.lycee.TechG }`,
+    },
+    {
+      id: 7,
+      field: "serieBacc",
+      headerName: "Série",
+      width: 150,
+      valueGetter: (params: GridValueGetterParams) =>
+      `${params.row.lycee.serieBacc }`,
+    },
   ]

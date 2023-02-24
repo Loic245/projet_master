@@ -37,7 +37,7 @@ const AdminSchema: Schema = new Schema({
     createdAt: {
         type: Date,
         default: new Date(),
-        required: true,
+        required: false,
     },
 });
 
