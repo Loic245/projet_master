@@ -11,6 +11,7 @@ export interface IProfessor {
     nomProf: string;
     prenomProf: string;
     adresseProf: string;
+    mail: string;
     CIN: Number | any;
     birthday: Date | any;
     placeOfBirth: string;
@@ -23,6 +24,7 @@ export interface IAdmin {
     nomAdmin: string;
     prenomAdmin: string;
     adresseAdmin: string;
+    mail: string;
     CIN: Number | any;
     birthday: Date | any;
     placeOfBirth: string;
@@ -35,6 +37,7 @@ export interface IEtudiant {
     nomEtu: string;
     prenomEtu: string;
     adresseEtu: string;
+    mail: string;
     CIN: Number | any;
     birthday: Date | any;
     placeOfBirth: string;

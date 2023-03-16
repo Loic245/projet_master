@@ -5,13 +5,26 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import HomeIcon from "@mui/icons-material/Home";
+import { inject, observer } from "mobx-react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
+import { authStoreInterface } from "../../store/authStore";
 
-const NavBar = () => {
+interface INavbar {
+  authStore?: authStoreInterface;
+}
+
+const NavBar = (props: any) => {
+  const { authStore } = props as INavbar;
+
   const history = useNavigate();
 
   const redirectHome = () => {
+    history("/dashboard");
+  };
+
+  const logout = async () => {
+    await authStore?.logout();
     history("/");
   };
 
@@ -31,8 +44,7 @@ const NavBar = () => {
               <HomeIcon /> &nbsp; Home
             </Button>
           </Typography>
-          <Button color="inherit">
-            {" "}
+          <Button color="inherit" onClick={logout}>
             <LogoutIcon /> &nbsp; Déconnexion
           </Button>
         </Toolbar>
@@ -41,4 +53,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default inject("authStore")(observer(NavBar));

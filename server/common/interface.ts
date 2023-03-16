@@ -66,3 +66,11 @@ export interface ILycee {
     nomLycee: String;
     TechG: String;
 }
+
+export interface IMailtext {
+    from: string;
+    to: string;
+    mdp: string;
+    client?: string;
+    message?: string | any;
+}

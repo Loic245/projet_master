@@ -14,6 +14,10 @@ const ProfessorSchema: Schema = new Schema({
         type: String,
         required: true,
     },
+    mail: {
+        type: String,
+        required: true,
+    },
     sexe: {
         type: String,
         required: true,

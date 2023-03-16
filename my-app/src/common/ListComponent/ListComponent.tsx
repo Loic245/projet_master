@@ -8,15 +8,37 @@ interface IListComponent {
   columns: GridColDef[] | any;
   handleSearch: () => void;
   createNew: () => void;
+  onRowClick: (row: any) => void;
+  search: string;
+  setSearch: () => void;
 }
 
 const ListComponent = (props: any) => {
-  const { rows, columns, handleSearch, createNew } = props as IListComponent;
+  const {
+    rows,
+    columns,
+    handleSearch,
+    createNew,
+    onRowClick,
+    search,
+    setSearch,
+  } = props as IListComponent;
   const classes = useStyles();
+
+  const handleRowClick = (k: any) => {
+    if (onRowClick) {
+      onRowClick(k.row);
+    }
+  };
 
   return (
     <Box className={classes.dataGrid}>
-      <SearchComponent createNew={createNew} handleSearch={handleSearch} />
+      <SearchComponent
+        createNew={createNew}
+        handleSearch={handleSearch}
+        search={search}
+        setSearch={setSearch}
+      />
       {rows.length === 0 ? (
         <div className={classes.resultatVide}>Pas de résultat !</div>
       ) : (
@@ -24,6 +46,7 @@ const ListComponent = (props: any) => {
           rows={rows}
           columns={columns}
           pageSize={5}
+          onRowClick={handleRowClick}
           rowsPerPageOptions={[5]}
           sortingOrder={["desc", "asc"]}
           getRowId={(row: any) => row.id || row._id}

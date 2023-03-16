@@ -1,0 +1,8 @@
+{
+    "mailer": {
+        "host": "smtp.gmail.com",
+        "email": "clicarmailprovider@gmail.com",
+        "password": "cirf nwzn xtbz loca",
+        "port": 587
+      }
+}

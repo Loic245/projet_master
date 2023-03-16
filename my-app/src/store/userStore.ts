@@ -13,9 +13,25 @@ export interface UserStoreInterface {
     isLoading: boolean;
     getAllUser: () => void;
     createUser: (data: IUser) => void;
+    // admin
+    getAllAdmin: () => void;
     createAdmin: (data: IAdmin) => void;
+    updateAdmin: (data: IAdmin | any) => void;
+    deleteAdmin: (data: string) => void;
+    searchAdmin: (data: string) => void;
+    // prof
+    getAllProf: () => void;
     createProf: (data: IProfessor) => void;
+    updateProf: (data: IProfessor | any) => void;
+    deleteProf: (data: string) => void;
+    searchProf: (data: string) => void;
+    // etudiant
+    getAllStudent: () => void;
     createStudent: (data: IEtudiant) => void;
+    updateStudent: (data: IEtudiant) => void;
+    deleteStudent: (data: string) => void;
+    searchStudent: (data: string) => void;
+
     updateUser: (data: IUser | any) => void;
     deleteUSer: (id: string) => void;
     tabsValue: number;
@@ -60,6 +76,21 @@ class UserStore implements UserStoreInterface {
         }
     }
 
+    @action getAllAdmin = async() => {
+        this.isLoading = true;
+        try {
+            const admin = await axios.get(`${config.baseURL}/user/admin`);
+
+            if(admin) {
+                this.allAdmin = admin.data
+            }
+        } catch(e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
     @action createUser = async(data: IUser) => {
         this.isLoading = true;
 
@@ -98,6 +129,66 @@ class UserStore implements UserStoreInterface {
         }
     }
 
+    @action updateAdmin = async(data: IAdmin | any) => {
+        this.isLoading = true;
+        try {
+            await axios.patch(`${config.baseURL}/user/admin`, data);
+
+            await this.getAllAdmin();
+            rootStore.setSnackBar(true, 'success', 'Mise à jour réussie avec succès !');
+            
+        } catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action deleteAdmin = async(data: string) => {
+        this.isLoading = true;
+        try{
+            await axios.delete(`${config.baseURL}/user/admin/${data}`)
+            await this.getAllAdmin();
+            rootStore.setSnackBar(true, 'success', 'Mise à jour réussie avec succès !');
+        }catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !'); 
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action searchAdmin = async(data: string) => {
+        this.isLoading = true;
+
+        try {
+            const result = await axios.post(`${config.baseURL}/user/admin/search`, {data})
+
+            if(result.data === "none") {
+                this.getAllAdmin()
+                return
+            }
+
+            this.allAdmin = result.data;
+
+        } catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !'); 
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action getAllProf = async() => {
+        try{
+            const prof = await axios.get(`${config.baseURL}/user/prof`)
+
+            if(prof) {
+                this.allProfessor = prof.data
+            }
+        }catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !'); 
+        }
+    }
+
     @action createProf = async(data: IProfessor) => {
         this.isLoading = true;
         try {
@@ -117,6 +208,63 @@ class UserStore implements UserStoreInterface {
         }
     }
 
+    @action updateProf = async(data: IProfessor | any) => {
+        this.isLoading = true;
+        try{
+            await axios.patch(`${config.baseURL}/user/prof`, data)
+
+            await this.getAllProf();
+        }catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !'); 
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action deleteProf = async(data: string) => {
+        this.isLoading = true;
+        try {
+            await axios.delete(`${config.baseURL}/user/prof/${data}`)
+
+            await this.getAllProf();
+        }catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !'); 
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action searchProf = async(data: string) => {
+        this.isLoading = true;
+
+        try {
+            const result = await axios.post(`${config.baseURL}/user/prof/search`, {data})
+
+            if(result.data === 'none'){
+                this.getAllProf()
+                return;
+            }
+
+            this.allProfessor = result.data;
+        } catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !'); 
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action getAllStudent = async() => {
+        try {
+            const student = await axios.get(`${config.baseURL}/user/student`)
+
+            if(student) {
+                this.allEtudiant = student.data;
+            }
+        } catch(e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
+        }
+    }
+
     @action createStudent = async(data: IEtudiant) => {
         this.isLoading = true;
         try{
@@ -131,6 +279,53 @@ class UserStore implements UserStoreInterface {
         } catch(e: any) {
             rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
             console.log("Error on creating student user !")
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action updateStudent = async(data: IEtudiant) => {
+        this.isLoading = true;
+        try {
+            await axios.patch(`${config.baseURL}/user/student`, {data})
+
+            await this.getAllStudent();
+        } catch(e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
+            console.log("Error on creating student user !")
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action deleteStudent = async(data: string) => {
+        this.isLoading = true;
+        try {
+            await axios.delete(`${config.baseURL}/user/student/${data}`)
+
+            await this.getAllStudent();
+        } catch(e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !');
+            console.log("Error on delete student user !")
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    @action searchStudent = async(data: string) => {
+        this.isLoading = true;
+
+        try {
+            const result = await axios.post(`${config.baseURL}/user/student/search`, {data})
+
+            if(result.data === 'none') {
+                this.getAllStudent();
+                return;
+            }
+
+            this.allEtudiant = result.data;
+        } catch (e: any) {
+            rootStore.setSnackBar(true, 'error', 'Une erreur est survenue, veuillez réessayez plus tard !'); 
         } finally {
             this.isLoading = false;
         }

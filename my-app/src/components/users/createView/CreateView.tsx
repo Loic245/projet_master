@@ -145,6 +145,22 @@ const CreateView = () => {
       <Grid container={true} spacing={3}>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
           <TextField
+            label="E-mail"
+            name="mail"
+            required={true}
+            value={data.mail}
+            onChange={handleChange}
+            InputProps={{
+              classes: {
+                input: style.inputClasses,
+              },
+            }}
+            InputLabelProps={{ shrink: true }}
+            fullWidth={true}
+          />
+        </Grid>
+        <Grid item={true} xs={4} sm={4} md={4} lg={4}>
+          <TextField
             label="CIN"
             name="CIN"
             required={true}

@@ -4,10 +4,13 @@ import { Box, TextField, Button } from "@material-ui/core";
 interface ISearchComponent {
   createNew: () => void;
   handleSearch: () => void;
+  search: string;
+  setSearch: () => void;
 }
 
 const SearchComponent = (props: any) => {
-  const { createNew, handleSearch } = props as ISearchComponent;
+  const { createNew, handleSearch, search, setSearch } =
+    props as ISearchComponent;
 
   const classes = useStyles();
 
@@ -17,6 +20,9 @@ const SearchComponent = (props: any) => {
         id="standard-basic"
         label="Rechercher ..."
         variant="standard"
+        name="search"
+        value={search}
+        onChange={setSearch}
       />
       <Button
         variant="contained"
