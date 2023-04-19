@@ -19,6 +19,12 @@ const CreateStudent = lazy(() => import("../components/users/createStudent"));
 
 const Login = lazy(() => import("../components/login"));
 
+const Communique = lazy(() => import("../components/communique"));
+
+const Message = lazy(() => import("../components/message"));
+
+const Notification = lazy(() => import("../components/notification"));
+
 const Router = () => {
   return (
     <Routes>
@@ -81,6 +87,39 @@ const Router = () => {
           <Suspense fallback={<Loader />}>
             <Layout>
               <CreateStudent />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/communique"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Communique />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/message"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Message />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/notification"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Notification />
             </Layout>
           </Suspense>
         }
