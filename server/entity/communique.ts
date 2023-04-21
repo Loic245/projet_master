@@ -1,10 +1,17 @@
 import mongoose, {Schema} from "mongoose";
 
+
+interface IPieceJoin {
+    id : string,
+    path : string,
+    name : string,
+}
 interface ICommunique {
     user: string;
     date: string;
     message: string;
     data?: any;
+    piecejoin?: IPieceJoin[];
 }
 
 const CommuniqueSchema: Schema = new Schema ({
@@ -23,6 +30,10 @@ const CommuniqueSchema: Schema = new Schema ({
     data: {
         type: Schema.Types.Mixed,
         required: false
+    },
+    piecejoin : {
+        type: Array<IPieceJoin> ,
+        default : []
     }
 });
 

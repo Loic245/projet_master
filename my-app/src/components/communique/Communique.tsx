@@ -13,33 +13,36 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import config from "../../config";
+import moment from "moment";
 import useStyles from "./style";
+import { inject, observer } from "mobx-react";
+import { CommuniqueStoreInterface } from "../../store/communiqueStore";
+import FileViewer from "react-file-viewer";
 
-const Communique = () => {
+interface IFrontCommunique {
+  communiqueStore: CommuniqueStoreInterface;
+}
+
+const Communique = (props?: any) => {
+  const { communiqueStore } = props as IFrontCommunique;
   const hiddenFileInput = useRef<any>({});
   const classes = useStyles();
 
   useEffect(() => {
     socket.on("receive_message_communique", async (data: any) => {
-      setIntoArray(data);
+      await communiqueStore.getAllCommunique();
     });
   }, [socket]);
 
-  const [arrayMessage, setArrayMessage] = useState<string[]>([]);
-  const [showMessage, setShowMessage] = useState<any>([]);
-
   useEffect(() => {
-    setShowMessage(arrayMessage);
-  }, [arrayMessage]);
+    communiqueStore.getAllCommunique();
+
+    // eslint-disable-next-line no-use-before-define
+  }, []);
 
   const [message, setMessage] = useState("");
 
   const [selectedFile, setSelectedFile] = useState<any>([]);
-
-  const setIntoArray = async (data: any) => {
-    console.log("mandalo ato :", data);
-    await arrayMessage.push(data);
-  };
 
   const handleChange = (e: any) => {
     const { value } = e.target;
@@ -48,16 +51,10 @@ const Communique = () => {
 
   const sendMessage = async () => {
     if (!message) {
-      console.log("tsisy data");
       return;
     }
-    console.log("tsy tonga ato izy izany");
-    socket.emit("send_message_communique", {
-      message: message,
-      user: "Rakoto",
-      date: "20/03/2023",
-    });
 
+    const emptyArray = [];
     if (selectedFile.length !== 0) {
       for (let i = 0; i < selectedFile.length; i++) {
         const formData = new FormData();
@@ -76,7 +73,7 @@ const Communique = () => {
 
         const path = "communique";
 
-        await axios
+        const resultUpload = await axios
           .post(`${config.baseURL}/upload/${path}`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -86,8 +83,21 @@ const Communique = () => {
             console.log("errorrrr :", err);
           });
         setSelectedFile([]);
+
+        emptyArray.push({
+          id: `${Date.now()}`,
+          name: `${name}.${extName}`,
+          path: resultUpload?.data?.filename,
+        });
       }
     }
+    socket.emit("send_message_communique", {
+      message: message,
+      user: "Rakoto",
+      date: `${moment().format("DD/MM/YYYY")}`,
+      piecejoin: emptyArray,
+    });
+    setMessage("");
   };
 
   const getExtName = (FileName: string) => {
@@ -115,8 +125,11 @@ const Communique = () => {
     hiddenFileInput.current.click();
   };
 
-  console.log("arrayMessage :", arrayMessage);
-  console.log("showMessage :", showMessage);
+  const getFile = (id: string) => async () => {
+    await communiqueStore.getOneFile(id);
+  };
+
+  console.log("one File :", communiqueStore.oneFile);
 
   return (
     <div>
@@ -125,6 +138,7 @@ const Communique = () => {
           <TextField
             label="Entrez le message ..."
             variant="standard"
+            value={message}
             onChange={handleChange}
             fullWidth
           />
@@ -167,7 +181,7 @@ const Communique = () => {
           ))}
         </Grid>
       )}
-      {arrayMessage.map((message: any) => (
+      {communiqueStore.listCommunique.map((k: any) => (
         <Card sx={{ minWidth: 275 }}>
           <CardContent>
             <Typography
@@ -175,13 +189,23 @@ const Communique = () => {
               color="text.secondary"
               gutterBottom
             >
-              {message}
+              {k.date} &nbsp; {k.user} <br />
+              {k.message} <br />
+              {k.piecejoin.map((piece: any) => (
+                <div style={{ color: "blue" }} onClick={getFile(piece.id)}>
+                  <u>{piece.name}</u>
+                </div>
+              ))}
             </Typography>
           </CardContent>
         </Card>
       ))}
+
+      {communiqueStore.oneFile && (
+        <FileViewer fileType="png" filePath={communiqueStore.oneFile.path} />
+      )}
     </div>
   );
 };
 
-export default Communique;
+export default inject("communiqueStore")(observer(Communique));

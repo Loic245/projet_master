@@ -6,8 +6,17 @@ import { baseURI } from "./utils";
 import { Communique } from "./entity/communique";
 let cors = require("cors");
 const http = require('http');
-const { Server } = require("socket.io")
+const { Server } = require("socket.io");
+const fs = require("file-system")
 
+
+// try {
+//   const path = '/uploads/communique/'
+//   const data = fs.readFileSync(`${__dirname}${path}check-1681922247920.png`);
+//   console.log(data);
+// } catch (err) {
+//   console.error("error on reading file",err);
+// }
 
 const app = express()
 
@@ -26,9 +35,9 @@ io.on("connection" , (socket: any) => {
   socket.on("send_message_communique", async(data: any) => {
     console.log("data:::::::::::",data)
 
-    // const result = await Communique.create({
-    //   ...data
-    // })
+    const result = await Communique.create({
+      ...data
+    })
 
     socket.broadcast.emit("receive_message_communique", data)
   })
