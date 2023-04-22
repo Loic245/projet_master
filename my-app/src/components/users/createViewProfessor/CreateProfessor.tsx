@@ -14,6 +14,7 @@ import { IProfessor } from "../../../common/Interfaces";
 import { useState, useEffect } from "react";
 import { userStore } from "../../../store";
 import { useNavigate } from "react-router-dom";
+import MatiereDialog from "./matiereDialog";
 
 const CreateProf = () => {
   useEffect(() => {
@@ -27,6 +28,7 @@ const CreateProf = () => {
   const style = useStyles();
 
   const [data, setData] = useState<IProfessor>(defaultProf);
+  const [openMatiere, setOpenMatiere] = useState(false);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -45,6 +47,14 @@ const CreateProf = () => {
 
   const handleback = () => {
     history("/users");
+  };
+
+  const handleOpenMatiere = () => {
+    setOpenMatiere(!openMatiere);
+  };
+
+  const handleCloseMatiere = () => {
+    setOpenMatiere(false);
   };
 
   return (
@@ -165,20 +175,7 @@ const CreateProf = () => {
           />
         </Grid>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
-          <TextField
-            label="Matière"
-            name="matiere"
-            required={true}
-            value={data.matiere}
-            onChange={handleChange}
-            InputProps={{
-              classes: {
-                input: style.inputClasses,
-              },
-            }}
-            InputLabelProps={{ shrink: true }}
-            fullWidth={true}
-          />
+          <label onClick={handleOpenMatiere}> Matière </label>
         </Grid>
       </Grid>
 
@@ -202,6 +199,11 @@ const CreateProf = () => {
           Enregistrer
         </Button>
       </Grid>
+
+      <MatiereDialog
+        openMatiere={openMatiere}
+        handleCloseMatiere={handleCloseMatiere}
+      />
     </Box>
   );
 };

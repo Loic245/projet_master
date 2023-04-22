@@ -25,6 +25,8 @@ const Message = lazy(() => import("../components/message"));
 
 const Notification = lazy(() => import("../components/notification"));
 
+const Parametre = lazy(() => import("../components/parametre"));
+
 const Router = () => {
   return (
     <Routes>
@@ -120,6 +122,17 @@ const Router = () => {
           <Suspense fallback={<Loader />}>
             <Layout>
               <Notification />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/parametre"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Parametre />
             </Layout>
           </Suspense>
         }

@@ -34,7 +34,7 @@ const Acceuil = (props: any) => {
       component: "Mon compte",
     },
     {
-      path: "/",
+      path: "/parametre",
       component: "Paramètre",
     },
     {

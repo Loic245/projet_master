@@ -39,7 +39,7 @@ io.on("connection" , (socket: any) => {
       ...data
     })
 
-    socket.broadcast.emit("receive_message_communique", data)
+    io.emit("receive_message_communique", data)
   })
 })
 

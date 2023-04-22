@@ -17,7 +17,7 @@ import moment from "moment";
 import useStyles from "./style";
 import { inject, observer } from "mobx-react";
 import { CommuniqueStoreInterface } from "../../store/communiqueStore";
-import FileViewer from "react-file-viewer";
+import DocViewer from "@cyntler/react-doc-viewer";
 
 interface IFrontCommunique {
   communiqueStore: CommuniqueStoreInterface;
@@ -125,8 +125,22 @@ const Communique = (props?: any) => {
     hiddenFileInput.current.click();
   };
 
+  const [document, setDocument] = useState<any>([]);
   const getFile = (id: string) => async () => {
     await communiqueStore.getOneFile(id);
+    console.log("mandalo ato");
+    const docs = [
+      {
+        uri: `${communiqueStore.oneFile.path}`,
+      },
+    ];
+    console.log("docs :", docs);
+
+    setDocument(docs);
+  };
+
+  const handleClose = () => {
+    setDocument([]);
   };
 
   console.log("one File :", communiqueStore.oneFile);
@@ -181,29 +195,54 @@ const Communique = (props?: any) => {
           ))}
         </Grid>
       )}
-      {communiqueStore.listCommunique.map((k: any) => (
-        <Card sx={{ minWidth: 275 }}>
-          <CardContent>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {k.date} &nbsp; {k.user} <br />
-              {k.message} <br />
-              {k.piecejoin.map((piece: any) => (
-                <div style={{ color: "blue" }} onClick={getFile(piece.id)}>
-                  <u>{piece.name}</u>
-                </div>
-              ))}
-            </Typography>
-          </CardContent>
-        </Card>
-      ))}
 
-      {communiqueStore.oneFile && (
-        <FileViewer fileType="png" filePath={communiqueStore.oneFile.path} />
+      {document.length !== 0 && (
+        <>
+          <DocViewer documents={document} />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleClose}
+            className={classes.closeBtn}
+            style={{ textTransform: "none" }}
+          >
+            Fermer
+          </Button>
+          <br />
+          <br />
+        </>
       )}
+      {communiqueStore.listCommunique.map((k: any) => (
+        <div className={classes.gridCommunique}>
+          <Typography className={classes.typoCommunique}>
+            {k.date} &nbsp; {k.user}
+          </Typography>
+          <Card sx={{ minWidth: 275 }}>
+            <CardContent className={classes.communique}>
+              <Typography
+                sx={{ fontSize: 14 }}
+                color="text.secondary"
+                gutterBottom
+              >
+                {k.message} <br />
+                {k.piecejoin.map((piece: any) => (
+                  <div
+                    onClick={getFile(piece.id)}
+                    className={classes.clickDownload}
+                  >
+                    <u>{piece.name}</u>
+                  </div>
+                ))}
+                {/* {communiqueStore.oneFile.path && (
+                <a href={`${communiqueStore.oneFile.path}`} download>
+                  Click to download
+                </a>
+              )} */}
+              </Typography>
+            </CardContent>
+          </Card>
+        </div>
+      ))}
     </div>
   );
 };

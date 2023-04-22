@@ -6,7 +6,7 @@ const MatiereSchema: Schema = new Schema({
         type: String,
         required: true,
     },
-    niveau: {
+    code: {
         type: String,
         required: true,
     },

@@ -5,6 +5,8 @@ import login from './login';
 import socket from './socket';
 import uploadFile from './uploadFile';
 import Communique from './communique';
+import Niveau from './niveau';
+import Matiere from './matiere'
 
 const routes = Router();
 
@@ -14,5 +16,7 @@ routes.use("/login", login);
 routes.use("/socket", socket);
 routes.use("/upload", uploadFile);
 routes.use('/communique', Communique);
+routes.use('/niveau', Niveau);
+routes.use('/matiere', Matiere)
 
 export default routes;
