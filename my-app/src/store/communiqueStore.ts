@@ -41,7 +41,12 @@ class CommuniqueStore implements CommuniqueStoreInterface {
         try {
             const oneResult = await axios.get(`${config.baseURL}/communique/getOne/${id}`)
             if(oneResult) {
-                this.oneFile = oneResult.data
+                const splitted = oneResult.data.path.split('.')
+                this.oneFile = {
+                    path : oneResult.data.path,
+                    type : splitted[splitted.length - 1]
+                }
+                
             }
         } catch (e: any) {
             console.log("error one getting one file :",e)

@@ -31,7 +31,7 @@ export default class CommuniqueController {
 
             if(oneFIle){
                 // const data = fs.readFileSync(`${__dirname.replace("\\controllers", '/uploads/communique/')}${oneFIle[0]?.path}`,{encoding:'utf8', flag:'r'});
-                const data = `${__dirname.replace("\\controllers", '/uploads/communique/')}${oneFIle[0]?.path}`;
+                const data = `${oneFIle[0]?.path}`;
                 // res.contentType("multipart/form-data")
                 // const testString = data.toString()
                 // console.log("testString :::::",testString)

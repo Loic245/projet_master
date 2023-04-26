@@ -18,6 +18,7 @@ import useStyles from "./style";
 import { inject, observer } from "mobx-react";
 import { CommuniqueStoreInterface } from "../../store/communiqueStore";
 import DocViewer from "@cyntler/react-doc-viewer";
+import FileViewer from "react-file-viewer";
 
 interface IFrontCommunique {
   communiqueStore: CommuniqueStoreInterface;
@@ -87,7 +88,7 @@ const Communique = (props?: any) => {
         emptyArray.push({
           id: `${Date.now()}`,
           name: `${name}.${extName}`,
-          path: resultUpload?.data?.filename,
+          path: `${path}/${resultUpload?.data?.filename}`,
         });
       }
     }
@@ -128,14 +129,12 @@ const Communique = (props?: any) => {
   const [document, setDocument] = useState<any>([]);
   const getFile = (id: string) => async () => {
     await communiqueStore.getOneFile(id);
-    console.log("mandalo ato");
+
     const docs = [
       {
         uri: `${communiqueStore.oneFile.path}`,
       },
     ];
-    console.log("docs :", docs);
-
     setDocument(docs);
   };
 
@@ -143,8 +142,7 @@ const Communique = (props?: any) => {
     setDocument([]);
   };
 
-  console.log("one File :", communiqueStore.oneFile);
-
+  console.log("communiqueStore.oneFile :", communiqueStore.oneFile);
   return (
     <div>
       <Grid container style={{ alignItems: "center" }}>
@@ -197,8 +195,11 @@ const Communique = (props?: any) => {
       )}
 
       {document.length !== 0 && (
-        <>
-          <DocViewer documents={document} />
+        <div style={{ width: "100%0", height: "200px" }}>
+          <FileViewer
+            fileType={`${communiqueStore.oneFile.type}`}
+            filePath={`${config.baseGetFile}/${communiqueStore.oneFile.path}`}
+          />
           <Button
             variant="contained"
             color="secondary"
@@ -210,7 +211,7 @@ const Communique = (props?: any) => {
           </Button>
           <br />
           <br />
-        </>
+        </div>
       )}
       {communiqueStore.listCommunique.map((k: any) => (
         <div className={classes.gridCommunique}>
