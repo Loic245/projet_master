@@ -17,8 +17,7 @@ import moment from "moment";
 import useStyles from "./style";
 import { inject, observer } from "mobx-react";
 import { CommuniqueStoreInterface } from "../../store/communiqueStore";
-import DocViewer from "@cyntler/react-doc-viewer";
-import FileViewer from "react-file-viewer";
+import CommuniqueDialog from "./CommuniqueDialog";
 
 interface IFrontCommunique {
   communiqueStore: CommuniqueStoreInterface;
@@ -42,6 +41,8 @@ const Communique = (props?: any) => {
   }, []);
 
   const [message, setMessage] = useState("");
+
+  const [openDialog, setOpenDialog] = useState(false);
 
   const [selectedFile, setSelectedFile] = useState<any>([]);
 
@@ -88,7 +89,7 @@ const Communique = (props?: any) => {
         emptyArray.push({
           id: `${Date.now()}`,
           name: `${name}.${extName}`,
-          path: `${path}/${resultUpload?.data?.filename}`,
+          path: `/${path}/${resultUpload?.data?.filename}`,
         });
       }
     }
@@ -112,8 +113,6 @@ const Communique = (props?: any) => {
   const getName = (FileName: string) => {
     const fileName = FileName.split(".");
 
-    const size = fileName.length;
-
     return fileName[0];
   };
 
@@ -126,23 +125,20 @@ const Communique = (props?: any) => {
     hiddenFileInput.current.click();
   };
 
-  const [document, setDocument] = useState<any>([]);
   const getFile = (id: string) => async () => {
     await communiqueStore.getOneFile(id);
-
-    const docs = [
-      {
-        uri: `${communiqueStore.oneFile.path}`,
-      },
-    ];
-    setDocument(docs);
+    setOpenDialog(true);
+    if (communiqueStore.oneFile.type === "pdf") {
+      setTimeout(() => {
+        setOpenDialog(false);
+      }, 500);
+    }
   };
 
-  const handleClose = () => {
-    setDocument([]);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
-  console.log("communiqueStore.oneFile :", communiqueStore.oneFile);
   return (
     <div>
       <Grid container style={{ alignItems: "center" }}>
@@ -194,7 +190,7 @@ const Communique = (props?: any) => {
         </Grid>
       )}
 
-      {document.length !== 0 && (
+      {/* {document.length !== 0 && (
         <div style={{ width: "100%0", height: "200px" }}>
           <FileViewer
             fileType={`${communiqueStore.oneFile.type}`}
@@ -212,7 +208,7 @@ const Communique = (props?: any) => {
           <br />
           <br />
         </div>
-      )}
+      )} */}
       {communiqueStore.listCommunique.map((k: any) => (
         <div className={classes.gridCommunique}>
           <Typography className={classes.typoCommunique}>
@@ -244,6 +240,14 @@ const Communique = (props?: any) => {
           </Card>
         </div>
       ))}
+      {communiqueStore.oneFile && (
+        <CommuniqueDialog
+          open={openDialog}
+          handleClose={handleCloseDialog}
+          type={`${communiqueStore.oneFile.type}`}
+          path={`${config.baseGetFile}${communiqueStore.oneFile.path}`}
+        />
+      )}
     </div>
   );
 };

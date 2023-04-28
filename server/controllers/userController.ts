@@ -7,6 +7,7 @@ import { Professor } from "../entity/professor";
 import nodemailer from 'nodemailer';
 import MailText from '../common/MailText';
 import { mailConfig } from "../utils";
+const bcrypt = require('bcrypt')
 
 
 const welcomeMessage = (data: string, mdp: string) => {
@@ -81,16 +82,30 @@ export default class UserController {
 
     static createAdmin = async(req: Request, res: Response) => {
         try {
+            const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
+            // AVYLW6XZS3 
+            const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
+
             const result = await Admin.create(req.body);
+
+            await User.create({
+                nom : req.body.nomAdmin,
+                prenom : req.body.prenomAdmin,
+                mail : req.body.mail,
+                password : hashedPassword,
+                sexe : req.body.sexe,
+                role : "ADMIN",
+                createdAt : new Date()
+            })
 
             const transporter = nodemailer.createTransport(mailConfig);
 
             // const dataMail: IMailtext = {
             //     from : 'rakotoarintsifaloic@gmail.com',
             //     to : 'bradjack24ricks@gmail.com',
-            //     mdp : '123456',
+            //     mdp : defaultPassword,
             //     client : `${req.body.nomAdmin}`,
-            //     message: welcomeMessage(req.body.nomAdmin, '123456')
+            //     message: welcomeMessage(req.body.nomAdmin, `${defaultPassword}`)
             // }
 
             // await transporter.sendMail(MailText(dataMail), function (error: any, info: any) {
@@ -199,7 +214,22 @@ export default class UserController {
 
     static createProf = async(req: Request, res: Response) => {
         try {
+            const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
+            // AVYLW6XZS3 mbola tsy izy io mdp io
+            console.log("defaultPassword :::::::::::",defaultPassword)
+            const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
+
             const result = await Professor.create(req.body)
+
+            await User.create({
+                nom : req.body.nomProf,
+                prenom : req.body.prenomProf,
+                mail : req.body.mail,
+                password : hashedPassword,
+                sexe : req.body.sexe,
+                role : "PROF",
+                createdAt : new Date()
+            })
 
             res.status(200).send(result)
         } catch (e: any) {
@@ -247,7 +277,25 @@ export default class UserController {
 
     static createStudent = async(req: Request, res: Response) => {
         try {
+            const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
+            // 2KQB182IDAJ 
+            const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
+
             const result = await Etudiant.create(req.body)
+
+            try {
+                await User.create({
+                    nom : req.body.nomEtu,
+                    prenom : req.body.prenomEtu,
+                    mail : req.body.mail,
+                    password : hashedPassword,
+                    sexe : req.body.sexe,
+                    role : "ETUDIANT",
+                    createdAt : new Date()
+                })
+            } catch( e: any) {
+                console.log("error :::",e)
+            }
 
             res.status(200).send(result)
         }catch (e: any) {

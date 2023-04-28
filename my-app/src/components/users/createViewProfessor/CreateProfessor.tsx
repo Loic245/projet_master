@@ -16,6 +16,11 @@ import { userStore } from "../../../store";
 import { useNavigate } from "react-router-dom";
 import MatiereDialog from "./matiereDialog";
 
+interface IDatas {
+  niveau: string;
+  matiere: string;
+}
+
 const CreateProf = () => {
   useEffect(() => {
     return () => {
@@ -55,6 +60,14 @@ const CreateProf = () => {
 
   const handleCloseMatiere = () => {
     setOpenMatiere(false);
+  };
+
+  const handleAddMatiere = () => (datas: IDatas) => {
+    console.log("tafiditra ato izy :", datas);
+    const emptyArray = data.matiere;
+    emptyArray?.push(datas);
+    setData({ ...data, matiere: emptyArray });
+    handleCloseMatiere();
   };
 
   return (
@@ -203,6 +216,7 @@ const CreateProf = () => {
       <MatiereDialog
         openMatiere={openMatiere}
         handleCloseMatiere={handleCloseMatiere}
+        handleAddMatiere={handleAddMatiere()}
       />
     </Box>
   );
