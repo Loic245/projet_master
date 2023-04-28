@@ -29,7 +29,6 @@ class NiveauStore implements NiveauStoreInterface {
                     id: datas[i]._id
                 })
             }
-            console.log("returnedArray :",returnedArray)
             if(returnedArray.length !== 0) {
                 this.listNiveau = returnedArray
             }

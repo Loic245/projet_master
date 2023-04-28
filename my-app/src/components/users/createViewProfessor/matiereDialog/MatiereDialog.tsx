@@ -12,11 +12,14 @@ import { Button, TextField } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { inject, observer } from "mobx-react";
 import { NiveauStoreInterface } from "../../../../store/niveauStore";
+import { MatiereInterface } from "../../../../store/matiereStore";
 
 interface IMatiereDialog {
   openMatiere: boolean;
   handleCloseMatiere: () => void;
+  handleAddMatiere: () => void;
   niveauStore: NiveauStoreInterface;
+  matiereStore: MatiereInterface;
 }
 
 interface INiveau {
@@ -29,14 +32,31 @@ const defaultNiveau: INiveau = {
   niveau: "",
 };
 
+interface IMatiere {
+  code: string;
+  matiere: string;
+}
+
+const defaultMatiere: IMatiere = {
+  code: "",
+  matiere: "",
+};
+
 const MatiereDialog = (props?: any) => {
-  const { openMatiere, handleCloseMatiere, niveauStore } =
-    props as IMatiereDialog;
+  const {
+    openMatiere,
+    handleCloseMatiere,
+    niveauStore,
+    matiereStore,
+    handleAddMatiere,
+  } = props as IMatiereDialog;
 
   const [current, setCurrent] = useState(defaultNiveau);
+  const [matiere, setMatiere] = useState(defaultMatiere);
 
   useEffect(() => {
     niveauStore.getNiveau();
+    matiereStore.getAllMatiere();
   }, []);
 
   const handleChange = (e: any) => {
@@ -44,8 +64,13 @@ const MatiereDialog = (props?: any) => {
     setCurrent({ ...current, [name]: value });
   };
 
+  const handleChangeMatiere = (e: any) => {
+    const { name, value } = e.target;
+    setMatiere({ ...matiere, [name]: value });
+  };
+
   return (
-    <Dialog open={openMatiere} onClose={handleCloseMatiere} maxWidth="xs">
+    <Dialog open={openMatiere} onClose={handleCloseMatiere} maxWidth="lg">
       <DialogTitle id="alert-dialog-title" color="primary">
         Ajout matière
       </DialogTitle>
@@ -57,10 +82,23 @@ const MatiereDialog = (props?: any) => {
               <MenuItem value={k.code}> {k.niveau} </MenuItem>
             ))}
           </Select>
+        </FormControl>{" "}
+        <br />
+        <FormControl variant="standard" fullWidth={true}>
+          <InputLabel shrink={true}>Matière</InputLabel>
+          <Select
+            name="matiere"
+            value={matiere.matiere}
+            onChange={handleChangeMatiere}
+          >
+            {matiereStore.listMatiere.map((k: IMatiere) => (
+              <MenuItem value={k.code}> {k.matiere} </MenuItem>
+            ))}
+          </Select>
         </FormControl>
       </DialogContent>
       <DialogActions style={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={handleAddMatiere}>
           Ajouter
         </Button>
       </DialogActions>
@@ -68,4 +106,4 @@ const MatiereDialog = (props?: any) => {
   );
 };
 
-export default inject("niveauStore")(observer(MatiereDialog));
+export default inject("niveauStore", "matiereStore")(observer(MatiereDialog));

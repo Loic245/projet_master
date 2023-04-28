@@ -16,7 +16,7 @@ export interface IProfessor {
     birthday: Date | any;
     placeOfBirth: string;
     sexe: string;
-    matiere?: string[];
+    matiere?: any[];
     createdAt?: Date;
 }
 

@@ -76,7 +76,7 @@ const NavBar = (props: any) => {
           </Button>
           <Button title="Communiqué" onClick={redirect("/communique")}>
             <Badge
-              badgeContent={4}
+              badgeContent={0}
               color="error"
               style={{ margin: "0 1rem", cursor: "pointer" }}
             >

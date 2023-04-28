@@ -200,8 +200,25 @@ const CreateStudent = () => {
         </Grid>
       </Grid>
 
-      {lycee.TechG === "Général" && (
-        <Grid container={true} spacing={3}>
+      <Grid container={true} spacing={3}>
+        <Grid item={true} xs={4} sm={4} md={4} lg={4}>
+          <TextField
+            label="E-Mail"
+            name="mail"
+            required={true}
+            value={data.mail}
+            onChange={handleChange}
+            InputProps={{
+              classes: {
+                input: style.inputClasses,
+              },
+            }}
+            InputLabelProps={{ shrink: true }}
+            fullWidth={true}
+          />
+        </Grid>
+
+        {lycee.TechG === "Général" && (
           <Grid item={true} xs={4} sm={4} md={4} lg={4}>
             <TextField
               label="Série"
@@ -218,8 +235,8 @@ const CreateStudent = () => {
               fullWidth={true}
             />
           </Grid>
-        </Grid>
-      )}
+        )}
+      </Grid>
 
       {snack}
       <Grid container={true} className={style.validation}>
