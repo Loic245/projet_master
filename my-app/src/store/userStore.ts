@@ -36,6 +36,10 @@ export interface UserStoreInterface {
     deleteUSer: (id: string) => void;
     tabsValue: number;
     setTabsValue : (data: number) => void;
+
+    setConnectedUser : (user: IUser) => void;
+    user : IUser | any;
+    getUser : () => void;
 }
 
 class UserStore implements UserStoreInterface {
@@ -51,6 +55,8 @@ class UserStore implements UserStoreInterface {
     @observable isLoading: boolean = false;
 
     @observable tabsValue = 0;
+
+    @observable user = {};
 
     constructor() {
         makeObservable(this);
@@ -357,6 +363,16 @@ class UserStore implements UserStoreInterface {
         } catch (e: any) {
             console.log("Error on deleting a user !")
         }
+    }
+
+    @action setConnectedUser = (user: IUser) => {
+        this.user = user
+    }
+
+    @action getUser = async() => {
+        const token = await localStorage.getItem('token')
+        const resulte = await axios.post(`${config.baseURL}/login/decode`, {token})
+        this.user = resulte.data
     }
 }
 

@@ -149,6 +149,8 @@ import moment from 'moment'
       field: "matiere",
       headerName: "Matiere",
       width: 150,
+      valueGetter: (params: GridValueGetterParams) => 
+      params.row.matiere.map((k: any) => `${k.niveau} ${k.matiere}`)
     },
   ]
 

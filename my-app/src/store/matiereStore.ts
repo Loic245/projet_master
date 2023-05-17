@@ -6,14 +6,24 @@ export interface MatiereInterface {
     listMatiere : any [] | [];
     createMatiere : (data : any) => void;
     getAllMatiere : () => void;
+    niveauMatiere : any[];
+    setNiveauMatiere : (data: any) => void;
 }
 
 class MatiereStore implements MatiereInterface {
 
     @observable listMatiere = [];
 
+    @observable niveauMatiere: any[] = [];
+
     constructor() {
         makeObservable(this);
+    }
+
+    @action setNiveauMatiere = (data : any) => {
+        if(data){
+            this.niveauMatiere.push(data)
+        }
     }
 
     @action getAllMatiere = async() => {

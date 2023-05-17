@@ -6,6 +6,7 @@ export interface IUser {
     sexe: String;
     role: String;
     createdAt: Date;
+    matricule: string;
 }
 
 export interface IProfessor {
@@ -19,6 +20,7 @@ export interface IProfessor {
     sexe: String;
     matiere: String[];
     createdAt: Date;
+    matricule: string;
 }
 
 export interface IAdmin {
@@ -32,6 +34,7 @@ export interface IAdmin {
     sexe: String;
     poste: String;
     createdAt: Date;
+    matricule: string;
 }
 
 export interface IEtudiant {
@@ -45,6 +48,7 @@ export interface IEtudiant {
     sexe: String;
     lycee: ILycee;
     createdAt: Date;
+    matricule: string;
 }
 
 export interface IRole {

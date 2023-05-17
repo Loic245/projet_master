@@ -2,6 +2,7 @@ import axios from 'axios';
 import { action, makeObservable, observable } from 'mobx';
 import config from '../config';
 import rootStore from './rootStore';
+import userStore from './userStore';
 
 export interface authStoreInterface {
     login: (data: ILogin) => void;
@@ -30,6 +31,7 @@ class authStore implements authStoreInterface {
                     message: 'user connecté !'
                 }
                 rootStore.setSnackBar(true, "success", "Login correct !")
+                await userStore.setConnectedUser(user.data.user)
                 return reponse
             } else {
                  rootStore.setSnackBar(true, "error", "Internal server error !")

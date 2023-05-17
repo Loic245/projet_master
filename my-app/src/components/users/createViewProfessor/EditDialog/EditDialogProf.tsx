@@ -7,6 +7,7 @@ import {
   Select,
   InputLabel,
   FormControl,
+  Grid,
 } from "@mui/material";
 import { Button, TextField } from "@material-ui/core";
 import { IProfessor } from "../../../../common/Interfaces";
@@ -129,14 +130,14 @@ const EditDialogProf = (props: any) => {
             <MenuItem value="Femme">Femme</MenuItem>
           </Select>
         </FormControl>
-        <TextField
-          variant="standard"
-          label="Poste"
-          name="matiere"
-          value={currentData.matiere}
-          onChange={handleChange}
-          fullWidth={true}
-        />
+        <Grid>
+          {currentData.matiere.map((k: any) => (
+            <div style={{ display: "flex" }}>
+              <TextField label="Niveau" value={k.niveau} />
+              <TextField label="Matière" value={k.matiere} />
+            </div>
+          ))}
+        </Grid>
       </DialogContent>
       <DialogActions style={{ display: "flex", justifyContent: "center" }}>
         <Button variant="contained" color="default" onClick={deleteAction}>
