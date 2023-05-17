@@ -83,16 +83,27 @@ export default class UserController {
     static createAdmin = async(req: Request, res: Response) => {
         try {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
-            // AVYLW6XZS3 
+            // AVYLW6XZS3 Administrateur
+            // P0Y3SLT3C7D Administratrice 
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 
-            const result = await Admin.create(req.body);
+            const TestIfData = await User.find()
+            let matricule: string;
+            if(!TestIfData.length) { 
+                matricule = "001"
+            } else {
+                matricule = `00${+TestIfData[TestIfData.length - 1].matricule + 1}`
+            }
+
+            const result = await Admin.create({...req.body, matricule});
 
             await User.create({
                 nom : req.body.nomAdmin,
                 prenom : req.body.prenomAdmin,
                 mail : req.body.mail,
                 password : hashedPassword,
+                image: req.body.image || '',
+                matricule,
                 sexe : req.body.sexe,
                 role : "ADMIN",
                 createdAt : new Date()
@@ -215,11 +226,25 @@ export default class UserController {
     static createProf = async(req: Request, res: Response) => {
         try {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
-            // AVYLW6XZS3 mbola tsy izy io mdp io
-            console.log("defaultPassword :::::::::::",defaultPassword)
+            // 4D4OD0CUK6P Professor
+            // 7YHI8Y51MW8 NewProf
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 
-            const result = await Professor.create(req.body)
+            const TestIfData = await User.find()
+            let matricule: string;
+            if(!TestIfData.length) { 
+                matricule = "001"
+            } else {
+                matricule = `00${+TestIfData[TestIfData.length - 1].matricule + 1}`
+            }
+
+            const newData = {
+                ...req.body,
+                matricule
+            }
+            console.log("newData ::::::::::",newData)
+
+            const result = await Professor.create(newData)
 
             await User.create({
                 nom : req.body.nomProf,
@@ -227,6 +252,8 @@ export default class UserController {
                 mail : req.body.mail,
                 password : hashedPassword,
                 sexe : req.body.sexe,
+                image: req.body.image || '',
+                matricule,
                 role : "PROF",
                 createdAt : new Date()
             })
@@ -278,10 +305,19 @@ export default class UserController {
     static createStudent = async(req: Request, res: Response) => {
         try {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
-            // 2KQB182IDAJ 
+            // 2KQB182IDAJ Etudiant
+            // KG8507R76TJ Etudiante
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 
-            const result = await Etudiant.create(req.body)
+            const TestIfData = await User.find()
+            let matricule: string;
+            if(!TestIfData.length) { 
+                matricule = "001"
+            } else {
+                matricule = `00${+TestIfData[TestIfData.length - 1].matricule + 1}`
+            }
+
+            const result = await Etudiant.create({...req.body, matricule})
 
             try {
                 await User.create({
@@ -290,6 +326,8 @@ export default class UserController {
                     mail : req.body.mail,
                     password : hashedPassword,
                     sexe : req.body.sexe,
+                    image: req.body.image || "",
+                    matricule,
                     role : "ETUDIANT",
                     createdAt : new Date()
                 })
@@ -384,6 +422,15 @@ export default class UserController {
             })
         } catch (e: any) {
             console.log("Failed to delete user !")
+        }
+    }
+
+
+    static getOneUserByUser = async(req: Request, res: Response) => {
+        try {
+            console.log("test")
+        } catch (e: any) {
+            console.log("Failed to get one User by User Collection ",e)
         }
     }
 

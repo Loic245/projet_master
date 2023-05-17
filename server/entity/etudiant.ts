@@ -53,6 +53,14 @@ const StudentSchema: Schema = new Schema({
     lycee: {
         type: LyceeSchema
     },
+    image: {
+        type: String,
+        required: false,
+    },
+    matricule : {
+        type : String,
+        required : true
+    },
     createdAt: {
         type: Date,
         default: new Date(),

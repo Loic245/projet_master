@@ -5,6 +5,8 @@ export interface IUser {
     sexe: string;
     role: string;
     createdAt?: Date | any;
+    image?: string;
+    matricule?: string;
 }
 
 export interface IProfessor {
@@ -18,6 +20,7 @@ export interface IProfessor {
     sexe: string;
     matiere?: any[];
     createdAt?: Date;
+    image?: string;
 }
 
 export interface IAdmin {
@@ -31,6 +34,7 @@ export interface IAdmin {
     sexe: string;
     poste: string;
     createdAt?: Date;
+    image?: string;
 }
 
 export interface IEtudiant {
@@ -44,6 +48,7 @@ export interface IEtudiant {
     sexe: string;
     lycee: ILycee;
     createdAt?: Date;
+    image?: string;
 }
 
 export interface IRole {

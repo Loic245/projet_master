@@ -42,6 +42,16 @@ const defaultMatiere: IMatiere = {
   matiere: "",
 };
 
+interface ISavedData {
+  niveau: string;
+  matiere: string;
+}
+
+const defaultSavedData: ISavedData = {
+  niveau: "",
+  matiere: "",
+};
+
 const MatiereDialog = (props?: any) => {
   const {
     openMatiere,
@@ -53,6 +63,7 @@ const MatiereDialog = (props?: any) => {
 
   const [current, setCurrent] = useState(defaultNiveau);
   const [matiere, setMatiere] = useState(defaultMatiere);
+  const [savedData, setSavedData] = useState(defaultSavedData);
 
   useEffect(() => {
     niveauStore.getNiveau();
@@ -62,11 +73,24 @@ const MatiereDialog = (props?: any) => {
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setCurrent({ ...current, [name]: value });
+    setSavedData({ ...savedData, niveau: value });
   };
 
   const handleChangeMatiere = (e: any) => {
     const { name, value } = e.target;
     setMatiere({ ...matiere, [name]: value });
+    setSavedData({ ...savedData, matiere: value });
+  };
+
+  const AddMatiere = () => {
+    if (!savedData.matiere || !savedData.niveau) {
+      return;
+    }
+    matiereStore.setNiveauMatiere(savedData);
+    setCurrent(defaultNiveau);
+    setMatiere(defaultMatiere);
+    setSavedData(defaultSavedData);
+    handleAddMatiere();
   };
 
   return (
@@ -92,13 +116,13 @@ const MatiereDialog = (props?: any) => {
             onChange={handleChangeMatiere}
           >
             {matiereStore.listMatiere.map((k: IMatiere) => (
-              <MenuItem value={k.code}> {k.matiere} </MenuItem>
+              <MenuItem value={k.matiere}> {k.matiere} </MenuItem>
             ))}
           </Select>
         </FormControl>
       </DialogContent>
       <DialogActions style={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" color="primary" onClick={handleAddMatiere}>
+        <Button variant="contained" color="primary" onClick={AddMatiere}>
           Ajouter
         </Button>
       </DialogActions>

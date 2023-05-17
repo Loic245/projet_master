@@ -1,16 +1,13 @@
-import { useNavigate } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import { UserStoreInterface } from "../../store/userStore";
 import { Box, Button, Grid } from "@material-ui/core";
 import useStyles from "./style";
+import { useEffect, useState } from "react";
+import config from "../../config";
+import Loader from "../../common/Spinner";
 
 interface IAccueil {
   userStore: UserStoreInterface;
-}
-
-interface Idata {
-  path: string;
-  component: string;
 }
 
 const Acceuil = (props: any) => {
@@ -18,44 +15,39 @@ const Acceuil = (props: any) => {
 
   const style = useStyles();
 
-  const history = useNavigate();
+  const [data, setData] = useState<any>(null);
 
-  const handleRedirect = (data: string) => () => {
-    history(data);
-  };
+  useEffect(() => {
+    fetch(`${config.api_strapi}accueils${config.populate_strapi}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => setData(res));
 
-  const column = [
-    {
-      path: "/users",
-      component: "Utilisateurs",
-    },
-    {
-      path: "/",
-      component: "Mon compte",
-    },
-    {
-      path: "/parametre",
-      component: "Paramètre",
-    },
-    {
-      path: "/",
-      component: "Mes documents",
-    },
-  ];
+    // return () => {
+    //   second
+    // }
+  }, []);
 
   return (
-    <Box style={{ display: "flex", flexWrap: "wrap" }}>
-      {column.map((data: Idata) => (
-        <Grid xs={6} sm={6} md={6} lg={6} className={style.container}>
-          <Grid
-            onClick={handleRedirect(`${data.path}`)}
-            className={style.dataGrid}
-          >
-            {data.component}
-          </Grid>
-        </Grid>
-      ))}
-    </Box>
+    <>
+      {data !== null ? (
+        <Box
+          style={{
+            height: "100vh",
+            backgroundImage: `url(${config.api_strapi_image}${data.data[0].attributes.background.data[0].attributes.formats.thumbnail.url})`,
+            backgroundSize: "cover",
+          }}
+        >
+          Hello world
+        </Box>
+      ) : (
+        <Loader />
+      )}
+    </>
   );
 };
 

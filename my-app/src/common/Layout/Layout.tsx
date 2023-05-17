@@ -1,21 +1,32 @@
 import NavBar from "../Navbar/NavBar";
 import SideBar from "../SideBar";
 import { Box, Grid } from "@material-ui/core";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { rootStoreInterface } from "../../store/rootStore";
 import { inject, observer } from "mobx-react";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import React from "react";
 import { useState } from "react";
+import { UserStoreInterface } from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   children: any;
   rootStore?: rootStoreInterface;
+  userStore?: UserStoreInterface;
 }
 
 const Layout: FC<IProps | any> = (props) => {
-  const { children, rootStore } = props as IProps;
+  const { children, rootStore, userStore } = props as IProps;
+  const history = useNavigate();
+
+  useEffect(() => {
+    userStore?.getUser();
+    if (localStorage.getItem("token") === null) {
+      history("/");
+    }
+  }, []);
 
   const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -40,37 +51,39 @@ const Layout: FC<IProps | any> = (props) => {
         <NavBar />
       </Grid>
       <Grid
-        container={true}
-        style={{ marginTop: "4rem" }}
-        xs={12}
-        sm={12}
-        md={12}
-        lg={12}
+        container
+        style={{
+          marginTop: "4rem",
+          height: "97vh",
+          // backgroundColor: "#e8e3e3",
+          width: "100%",
+        }}
       >
         <Grid
-          item={true}
-          xs={12}
+          item
+          xs={3}
           sm={3}
           md={3}
           lg={3}
           style={{
             position: "fixed",
+            // paddingTop: "18rem",
             height: "100vh",
-            borderRight: "2px solid #f50057",
+            backgroundColor: "#e8e3e3",
+            borderRight: "4px solid #1c1847",
           }}
         >
           <SideBar />
         </Grid>
+        <Grid xs={2} sm={2} md={2} lg={2} />
         <Grid
-          item={true}
-          xs={12}
-          sm={9}
-          md={9}
-          lg={9}
+          item
+          xs={10}
+          sm={10}
+          md={10}
+          lg={10}
           style={{
-            position: "relative",
-            padding: "0.5rem",
-            marginLeft: "18rem",
+            padding: "0 0 0 3.8rem",
           }}
         >
           {children}
@@ -93,4 +106,4 @@ const Layout: FC<IProps | any> = (props) => {
   );
 };
 
-export default inject("rootStore")(observer(Layout));
+export default inject("rootStore", "userStore")(observer(Layout));

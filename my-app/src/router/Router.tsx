@@ -27,6 +27,14 @@ const Notification = lazy(() => import("../components/notification"));
 
 const Parametre = lazy(() => import("../components/parametre"));
 
+const About = lazy(() => import("../components/apropos"));
+
+const Profil = lazy(() => import("../components/profil"));
+
+const Documents = lazy(() => import("../components/documents"));
+
+const Statistique = lazy(() => import("../components/statistique"));
+
 const Router = () => {
   return (
     <Routes>
@@ -133,6 +141,50 @@ const Router = () => {
           <Suspense fallback={<Loader />}>
             <Layout>
               <Parametre />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/a_propos"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <About />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/profil"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Profil />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/documents"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Documents />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/statistique"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Statistique />
             </Layout>
           </Suspense>
         }

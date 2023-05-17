@@ -14,6 +14,7 @@ import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import EmailIcon from "@mui/icons-material/Email";
 import io from "socket.io-client";
+import TemporaryDrawer from "./Menu";
 
 interface INavbar {
   authStore?: authStoreInterface;
@@ -26,9 +27,9 @@ const NavBar = (props: any) => {
 
   const history = useNavigate();
 
-  const redirectHome = () => {
-    history("/dashboard");
-  };
+  // const redirectHome = () => {
+  //   history("/dashboard");
+  // };
 
   const redirect = (data: string) => () => {
     socket.emit("send_message", { message: "Hello" });
@@ -43,7 +44,7 @@ const NavBar = (props: any) => {
   return (
     <Box>
       <AppBar>
-        <Toolbar>
+        <Toolbar sx={{ backgroundColor: "#000" }}>
           <IconButton
             size="large"
             edge="start"
@@ -52,9 +53,10 @@ const NavBar = (props: any) => {
             sx={{ mr: 2 }}
           ></IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Button color="inherit" onClick={redirectHome}>
+            <TemporaryDrawer />
+            {/* <Button color="inherit" onClick={redirectHome}>
               <HomeIcon /> &nbsp; Home
-            </Button>
+            </Button> */}
           </Typography>
           <Button title="Message" onClick={redirect("/message")}>
             <Badge

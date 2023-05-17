@@ -11,3 +11,8 @@ run command : npm start
 
 cd server
 run command : npm run start
+
+# strapi
+
+cd strapi
+run command : npm run develop

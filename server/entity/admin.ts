@@ -38,6 +38,14 @@ const AdminSchema: Schema = new Schema({
         type: String,
         required: true,
     },
+    image: {
+        type: String,
+        required: false,
+    },
+    matricule : {
+        type: String,
+        required: false,
+    },
     createdAt: {
         type: Date,
         default: new Date(),

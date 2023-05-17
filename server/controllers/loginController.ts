@@ -23,15 +23,27 @@ export default class LoginController {
                         const token = Jwt.sign({
                             isAuthentified : true,
                             username : data.nom,
+                            _id : user._id,
                             connectedTime: new Date()
                         }, secret_code_token)
         
-                        return res.status(200).send({ status: 200 ,token })
+                        return res.status(200).send({ status: 200 ,token, user })
                     } 
 
                     return res.status(403).send('Mot de passe incorrect')
             }
         } catch (e: any) {
+            res.sendStatus(500)
+        }
+    }
+
+    static decodeToken = async(req: Request, res : Response) => {
+        const token = req.body.token;
+        try {
+            const result = Jwt.decode(token);
+            const user = await User.findById(result._id)
+            res.status(200).send(user)
+        } catch( e: any) {
             res.sendStatus(500)
         }
     }

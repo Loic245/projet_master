@@ -34,11 +34,15 @@ const ProfessorSchema: Schema = new Schema({
         type: String,
         required: true,
     },
-    matiere: [
-        {
-            type: String
-        }
-    ],
+    matiere: [],
+    image: {
+        type: String,
+        required: false,
+    },
+    matricule: {
+        type: String,
+        required: false,
+    },
     createdAt: {
         type: Date,
         default: new Date(),
