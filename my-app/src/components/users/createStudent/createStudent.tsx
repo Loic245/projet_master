@@ -11,9 +11,12 @@ import {
 import useStyles from "./style";
 import { defaultStudent, defaultLycee } from "../../../common/default";
 import { IEtudiant, ILycee } from "../../../common/Interfaces";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { userStore } from "../../../store";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import config from "../../../config";
+import BackupIcon from "@mui/icons-material/Backup";
 
 const CreateStudent = () => {
   useEffect(() => {
@@ -26,6 +29,7 @@ const CreateStudent = () => {
 
   const style = useStyles();
 
+  const [selectedFile, setSelectedFile] = useState<any>([]);
   const [data, setData] = useState<IEtudiant>(defaultStudent);
   const [snack, setSnack] = useState<any>();
   const [lycee, setLycee] = useState<ILycee>(defaultLycee);
@@ -43,9 +47,87 @@ const CreateStudent = () => {
   const handleSubmit = async () => {
     setData({ ...data, lycee: lycee });
     data.lycee = lycee;
-    const result = await userStore.createStudent(data);
-    setSnack(result);
+    if (selectedFile.length > 0) {
+      const newValue = await uploadFileFunction();
+      const result = await userStore.createStudent(newValue);
+      setSnack(result);
+    } else {
+      const result = await userStore.createStudent(data);
+      setSnack(result);
+    }
     history("/users");
+  };
+
+  const uploadFileFunction = async () => {
+    const formData = new FormData();
+
+    const getTypeFile: string = selectedFile[0].type;
+
+    const extName = getExtName(selectedFile[0].name);
+
+    const name = getName(selectedFile[0].name);
+
+    const fileUploaded = new File([selectedFile[0]], `${name}.${extName}`, {
+      type: getTypeFile,
+    });
+
+    formData.append("file", fileUploaded);
+
+    const path = "profiles";
+
+    const resultUpload = await axios
+      .post(`${config.baseURL}/upload/${path}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .catch((err: any) => {
+        console.log("errorrrr :", err);
+      });
+
+    const newData = {
+      ...data,
+      image: `/${path}/${resultUpload?.data?.filename}`,
+    };
+    setData(newData);
+
+    return newData;
+  };
+
+  const hiddenFileInput = useRef<any>({});
+  const hiddenFileInputTwo = useRef<any>({});
+
+  const handleClick = () => {
+    hiddenFileInput.current.click();
+  };
+
+  const handleClickViewed = () => {
+    hiddenFileInputTwo.current.click();
+  };
+
+  const [viewImage, setViewImage] = useState<any>();
+
+  const handleFileChange = async (e: any) => {
+    e.preventDefault();
+    setViewImage(URL.createObjectURL(e.target.files[0]));
+    if (selectedFile.length > 0) {
+      setSelectedFile([]);
+    }
+    setSelectedFile([...selectedFile, e.target.files[0]]);
+  };
+
+  const getExtName = (FileName: string) => {
+    const fileName = FileName.split(".");
+
+    const size = fileName.length;
+
+    return fileName[size - 1];
+  };
+
+  const getName = (FileName: string) => {
+    const fileName = FileName.split(".");
+
+    return fileName[0];
   };
 
   const handleback = () => {
@@ -57,6 +139,37 @@ const CreateStudent = () => {
       <h1>Création étudiant</h1>
       <br />
       <Grid container={true} className={style.container} spacing={3}>
+        <div className={style.uploadCountour}>
+          {selectedFile.length > 0 ? (
+            <>
+              <button onClick={handleClickViewed} className={style.btnUpload}>
+                <img
+                  className={style.viewImage}
+                  src={viewImage}
+                  alt="profile_image"
+                />
+              </button>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                ref={hiddenFileInputTwo}
+                style={{ display: "none" }}
+              />
+            </>
+          ) : (
+            <>
+              <button onClick={handleClick} className={style.btnUpload}>
+                <BackupIcon sx={{ fontSize: "5rem" }} />
+              </button>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                ref={hiddenFileInput}
+                style={{ display: "none" }}
+              />
+            </>
+          )}
+        </div>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
           <TextField
             label="Nom"

@@ -30,4 +30,7 @@ router.patch("/student", UserController.updateStudent);
 router.delete("/student/:id", UserController.deleteStudent);
 router.post("/student/search", UserController.searchStudent);
 
+router.post('/oneUser', UserController.getOneUserData);
+router.patch('/updateProfil', UserController.updateprofile);
+
 export default router;

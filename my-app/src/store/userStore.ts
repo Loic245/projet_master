@@ -39,7 +39,10 @@ export interface UserStoreInterface {
 
     setConnectedUser : (user: IUser) => void;
     user : IUser | any;
+    profil : any;
     getUser : () => void;
+    getOneUserData : () => void;
+    updateProfile : (data : any) => void;
 }
 
 class UserStore implements UserStoreInterface {
@@ -57,6 +60,8 @@ class UserStore implements UserStoreInterface {
     @observable tabsValue = 0;
 
     @observable user = {};
+
+    @observable profil = {};
 
     constructor() {
         makeObservable(this);
@@ -372,7 +377,30 @@ class UserStore implements UserStoreInterface {
     @action getUser = async() => {
         const token = await localStorage.getItem('token')
         const resulte = await axios.post(`${config.baseURL}/login/decode`, {token})
+        const oneUser = await axios.post(`${config.baseURL}/user/oneUser`, {user : resulte.data})
+        this.profil = oneUser.data;
         this.user = resulte.data
+    }
+
+    @action getOneUserData = async() => {
+        const oneUser = await axios.post(`${config.baseURL}/user/oneUser`, {user : this.user})
+        this.profil = oneUser.data;
+    }
+
+    @action updateProfile = async(data: any) => {
+        this.isLoading = true;
+        try {
+            const updatedUser = await axios.patch(`${config.baseURL}/user/updateProfil`, {user : data})
+            if(updatedUser.data) {
+                this.user = updatedUser.data;
+                const oneUser = await axios.post(`${config.baseURL}/user/oneUser`, {user : updatedUser.data})
+                this.profil = oneUser.data;
+            }
+        } catch (e : any) {
+            console.log("errror on updating profile",e)
+        } finally {
+            this.isLoading = false;
+        }
     }
 }
 

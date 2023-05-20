@@ -11,12 +11,15 @@ import {
 import useStyles from "./style";
 import { defaultProf } from "../../../common/default";
 import { IProfessor } from "../../../common/Interfaces";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { userStore } from "../../../store";
 import { useNavigate } from "react-router-dom";
 import MatiereDialog from "./matiereDialog";
 import { inject, observer } from "mobx-react";
 import { MatiereInterface } from "../../../store/matiereStore";
+import axios from "axios";
+import config from "../../../config";
+import BackupIcon from "@mui/icons-material/Backup";
 
 interface IDatas {
   niveau: string;
@@ -35,6 +38,7 @@ const CreateProf = (props: any) => {
     };
   }, []);
 
+  const [selectedFile, setSelectedFile] = useState<any>([]);
   const history = useNavigate();
 
   const style = useStyles();
@@ -53,8 +57,85 @@ const CreateProf = (props: any) => {
   };
 
   const handleSubmit = async () => {
-    await userStore.createProf(data);
+    if (selectedFile.length > 0) {
+      const newValue = await uploadFileFunction();
+      await userStore.createProf(newValue);
+    } else {
+      await userStore.createProf(data);
+    }
     history("/users");
+  };
+
+  const uploadFileFunction = async () => {
+    const formData = new FormData();
+
+    const getTypeFile: string = selectedFile[0].type;
+
+    const extName = getExtName(selectedFile[0].name);
+
+    const name = getName(selectedFile[0].name);
+
+    const fileUploaded = new File([selectedFile[0]], `${name}.${extName}`, {
+      type: getTypeFile,
+    });
+
+    formData.append("file", fileUploaded);
+
+    const path = "profiles";
+
+    const resultUpload = await axios
+      .post(`${config.baseURL}/upload/${path}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .catch((err: any) => {
+        console.log("errorrrr :", err);
+      });
+
+    const newData = {
+      ...data,
+      image: `/${path}/${resultUpload?.data?.filename}`,
+    };
+    setData(newData);
+
+    return newData;
+  };
+
+  const hiddenFileInput = useRef<any>({});
+  const hiddenFileInputTwo = useRef<any>({});
+
+  const handleClick = () => {
+    hiddenFileInput.current.click();
+  };
+
+  const handleClickViewed = () => {
+    hiddenFileInputTwo.current.click();
+  };
+
+  const [viewImage, setViewImage] = useState<any>();
+
+  const handleFileChange = async (e: any) => {
+    e.preventDefault();
+    setViewImage(URL.createObjectURL(e.target.files[0]));
+    if (selectedFile.length > 0) {
+      setSelectedFile([]);
+    }
+    setSelectedFile([...selectedFile, e.target.files[0]]);
+  };
+
+  const getExtName = (FileName: string) => {
+    const fileName = FileName.split(".");
+
+    const size = fileName.length;
+
+    return fileName[size - 1];
+  };
+
+  const getName = (FileName: string) => {
+    const fileName = FileName.split(".");
+
+    return fileName[0];
   };
 
   const handleback = () => {
@@ -81,6 +162,37 @@ const CreateProf = (props: any) => {
       <h1>Création de Professeur</h1>
       <br />
       <Grid container={true} className={style.container} spacing={3}>
+        <div className={style.uploadCountour}>
+          {selectedFile.length > 0 ? (
+            <>
+              <button onClick={handleClickViewed} className={style.btnUpload}>
+                <img
+                  className={style.viewImage}
+                  src={viewImage}
+                  alt="profile_image"
+                />
+              </button>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                ref={hiddenFileInputTwo}
+                style={{ display: "none" }}
+              />
+            </>
+          ) : (
+            <>
+              <button onClick={handleClick} className={style.btnUpload}>
+                <BackupIcon sx={{ fontSize: "5rem" }} />
+              </button>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                ref={hiddenFileInput}
+                style={{ display: "none" }}
+              />
+            </>
+          )}
+        </div>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
           <TextField
             label="Nom"

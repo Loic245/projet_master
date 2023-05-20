@@ -21,7 +21,23 @@ const useStyles = makeStyles({
     validation: {
         display: 'flex',
         justifyContent: 'center'
-    }
+    },
+    uploadCountour : {
+        padding : "2rem",
+        border : "dotted 2px black",
+        borderRadius : "50%"
+    },
+    btnUpload : {
+        backgroundColor: "transparent",
+        border: "none",
+        '&:hover' : {
+            cursor : "pointer"
+        },
+    },
+    viewImage : {
+        width : '100px',
+        height : '100px',
+    },
   
   });
   

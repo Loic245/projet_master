@@ -46,7 +46,7 @@ const TemporaryDrawer = (props: any) => {
 
   const redirect =
     (anchor: Anchor, open: boolean, path: string) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
+    async (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
         event.type === "keydown" &&
         ((event as React.KeyboardEvent).key === "Tab" ||
