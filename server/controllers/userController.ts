@@ -426,12 +426,75 @@ export default class UserController {
     }
 
 
-    static getOneUserByUser = async(req: Request, res: Response) => {
+    static getOneUserData = async(req: Request, res: Response) => {
+        const { user } = req.body;
         try {
-            console.log("test")
+            if(user){
+                let result;
+                if(user.role === "ADMIN") {
+                    result = await Admin.findOne({ matricule : user.matricule })
+                }
+    
+                if(user.role === "ETUDIANT") {
+                    result = await Etudiant.findOne({ matricule : user.matricule })
+                }
+    
+                if(user.role === "PROF") {
+                    result = await Professor.findOne({ matricule : user.matricule })
+                }
+    
+                res.status(200).send(result)
+            }
         } catch (e: any) {
             console.log("Failed to get one User by User Collection ",e)
         }
     }
+
+    static updateprofile = async(req: Request, res: Response) => {
+        const { user } = req.body;
+        try {
+            if(user){
+                let updatedUser: any = {
+                    image : user.image,
+                }
+                if(user.password) {
+                    const hashedPassword = bcrypt.hashSync(`${user.password}`, 10)
+                    updatedUser = {
+                        ...updatedUser,
+                        password : hashedPassword
+                    }
+                }
+                let result;
+                if(user.role === "ADMIN") {
+                    result = await Admin.updateOne({ matricule : user.matricule }, {
+                        ...user
+                    })
+                }
+    
+                if(user.role === "ETUDIANT") {
+                    result = await Etudiant.updateOne({ matricule : user.matricule }, {
+                        ...user
+                    })
+                }
+    
+                if(user.role === "PROF") {
+                    result = await Professor.updateOne({ matricule : user.matricule }, {
+                        ...user
+                    })
+                }
+    
+                await User.updateOne({matricule : user.matricule}, {
+                    ...updatedUser
+                })
+
+                const sendResult = await User.findOne({matricule : user.matricule})
+                res.status(200).send(sendResult)
+            }
+        } catch(e: any) {
+            console.log("Failed to update profile :::::::",e)
+            return res.sendStatus(500)
+        }
+    }
+
 
 }

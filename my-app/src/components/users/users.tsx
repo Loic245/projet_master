@@ -114,7 +114,7 @@ const Acceuil = (props: any) => {
           aria-label="basic tabs example"
         >
           <Tab label="Administrateurs" {...a11yProps(0)} />
-          <Tab label="Professeurs" {...a11yProps(1)} />
+          <Tab label="Enseignants" {...a11yProps(1)} />
           <Tab label="Etudiants" {...a11yProps(2)} />
         </Tabs>
       </Box>

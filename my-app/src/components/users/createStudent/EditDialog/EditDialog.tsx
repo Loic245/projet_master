@@ -17,6 +17,8 @@ import { inject, observer } from "mobx-react";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { UserStoreInterface } from "../../../../store/userStore";
+import config from "../../../../config";
+import person from "../../../../assets/person_icon.png";
 
 interface IEditDialog {
   openDialogAdmin: boolean;
@@ -69,9 +71,25 @@ const EditDialogStudent = (props: any) => {
       maxWidth="xs"
     >
       <DialogTitle id="alert-dialog-title" color="primary">
-        Modification Administrateur
+        Etudiant
       </DialogTitle>
       <DialogContent>
+        <center>
+          <img
+            style={{
+              width: "100px",
+              height: "100px",
+              borderRadius: "50%",
+              margin: "0 auto",
+            }}
+            src={
+              currentData?.image
+                ? `${config.baseGetFile}${currentData?.image}`
+                : person
+            }
+            alt="profile_image"
+          />
+        </center>
         <TextField
           variant="standard"
           label="Nom"

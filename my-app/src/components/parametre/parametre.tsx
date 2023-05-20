@@ -105,7 +105,12 @@ const Parametre = (props: any) => {
       <Box>
         <Grid container sx={{ justifyContent: "space-around" }}>
           <Grid item xs={12} sm={5} md={5} sx={{ height: 400 }}>
-            <DataGrid rows={niveauStore.listNiveau} columns={columns} />
+            <DataGrid
+              rows={niveauStore.listNiveau}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+            />
             <Button
               variant="contained"
               color="primary"
@@ -152,6 +157,8 @@ const Parametre = (props: any) => {
             <DataGrid
               rows={matiereStore.listMatiere}
               columns={columnsMatiere}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
             />
             <Button
               variant="contained"
