@@ -37,9 +37,11 @@ const Acceuil = (props: any) => {
       {data !== null ? (
         <Box
           style={{
+            width: "100%",
             height: "100vh",
             backgroundImage: `url(${config.api_strapi_image}${data.data[0].attributes.background.data[0].attributes.formats.thumbnail.url})`,
             backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
           }}
         >
           Hello world
