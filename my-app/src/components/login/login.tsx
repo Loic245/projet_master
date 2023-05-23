@@ -1,4 +1,10 @@
-import { Box, Grid, TextField, Button } from "@material-ui/core";
+import {
+  Box,
+  Grid,
+  TextField,
+  Button,
+  InputAdornment,
+} from "@material-ui/core";
 import { useState } from "react";
 import { ILogin } from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +14,11 @@ import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import { authStoreInterface } from "../../store/authStore";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import KeyIcon from "@mui/icons-material/Key";
+import backGround from "../../assets/test.webp";
+import config from "../../config";
+import useStyles from "./style";
 
 const defaultData: ILogin = {
   nom: "",
@@ -20,6 +31,8 @@ interface Ilogin {
 
 const Login = (props: any) => {
   const { authStore } = props as Ilogin;
+
+  const classes = useStyles();
 
   const redirect = useNavigate();
 
@@ -69,33 +82,112 @@ const Login = (props: any) => {
     }
   };
 
+  const handleEnterKey = (e: KeyboardEvent | any) => {
+    if (e.code === "Enter") {
+      submit(e);
+    }
+  };
+
   return (
-    <Box style={{ display: "flex", justifyContent: "center" }}>
-      <Grid xs={10} sm={10} md={4} lg={4}>
-        <TextField
-          variant="standard"
-          label="Nom"
-          name="nom"
-          value={data.nom}
-          fullWidth={true}
-          onChange={handleChange}
-        />
-        <TextField
-          variant="standard"
-          label="Mot de passe"
-          name="password"
-          type="password"
-          value={data.password}
-          fullWidth={true}
-          onChange={handleChange}
-        />
-        <br />
-        <br />
-        <center>
-          <Button variant="contained" color="primary" onClick={submit}>
-            Connexion
-          </Button>
-        </center>
+    <Box
+      style={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        backgroundImage: `url('${config.baseGetFile}/test.webp')`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        paddingTop: "5rem",
+      }}
+    >
+      <Grid
+        xs={10}
+        sm={10}
+        md={3}
+        lg={3}
+        style={{
+          // backgroundColor: "#898686",
+          // opacity: 0.1,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Grid xs={10} sm={10} md={10} lg={10}>
+          <center>
+            <h1 style={{ color: "yellow", fontFamily: "Georgia, sans-serif" }}>
+              Etablissement Scolaire XXX
+            </h1>
+          </center>
+          <label style={{ color: "white" }}>&nbsp; UserName</label>
+          <br />
+          <TextField
+            variant="standard"
+            name="nom"
+            size="small"
+            value={data.nom}
+            onChange={handleChange}
+            fullWidth={true}
+            autoComplete="none"
+            onKeyPress={handleEnterKey}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  &nbsp; &nbsp; <PersonOutlineIcon /> &nbsp; &nbsp;
+                </InputAdornment>
+              ),
+              style: {
+                color: "#fff",
+                border: "solid 2px #848080",
+                borderRadius: "8px",
+                background: "#000",
+                zIndex: 1,
+              },
+            }}
+          />
+          <br />
+          <br />
+          <>
+            <label style={{ color: "white" }}>&nbsp; Mot de passe</label>
+            <br />
+            <TextField
+              variant="standard"
+              name="password"
+              type="password"
+              size="small"
+              value={data.password}
+              onChange={handleChange}
+              fullWidth={true}
+              onKeyPress={handleEnterKey}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    &nbsp; &nbsp; <KeyIcon /> &nbsp; &nbsp;
+                  </InputAdornment>
+                ),
+                style: {
+                  color: "#fff",
+                  border: "solid 2px #848080",
+                  borderRadius: "8px",
+                  background: "#000",
+                },
+              }}
+            />
+          </>
+
+          <br />
+          <br />
+          <center>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={submit}
+              size="small"
+            >
+              Connexion
+            </Button>
+          </center>
+        </Grid>
       </Grid>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}

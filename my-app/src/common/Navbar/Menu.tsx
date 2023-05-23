@@ -65,7 +65,7 @@ const TemporaryDrawer = (props: any) => {
     {
       id: 0,
       path: "/dashboard",
-      component: "Dashboard",
+      component: "Tableau de bord",
       permission: ["ADMIN", "PROF", "ETUDIANT"],
     },
     {
@@ -83,7 +83,7 @@ const TemporaryDrawer = (props: any) => {
     {
       id: 3,
       path: "/parametre",
-      component: "Paramètre",
+      component: "Paramètres",
       permission: ["ADMIN"],
     },
     {
@@ -111,14 +111,17 @@ const TemporaryDrawer = (props: any) => {
       {/* {(["left", "right", "top", "bottom"] as const).map((anchor) => ( */}
       <React.Fragment key={"left"}>
         <Button color="inherit" onClick={toggleDrawer("left", true)}>
-          <HomeIcon /> &nbsp; Home
+          <HomeIcon /> &nbsp; MENU
         </Button>
         <Drawer
           anchor={"left"}
           open={state.left}
           onClose={toggleDrawer("left", false)}
+          // style={{ background: "#eddede" }}
         >
-          <h2>&nbsp; &nbsp; &nbsp; Dashboard</h2>
+          <h3>
+            &nbsp; &nbsp; &nbsp; <u>Etablissement scolaire</u>
+          </h3>
           {column.map((item: any) => (
             <>
               <ListItem

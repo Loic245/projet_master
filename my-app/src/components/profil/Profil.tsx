@@ -190,9 +190,7 @@ const Profil = (props: any) => {
             variant="standard"
             label="Adresse"
             name={adresseExact}
-            value={
-              profile?.adresseAdmin || profile.adresseEtu || profile.adresseProf
-            }
+            value={profile?.adresseAdmin}
             InputLabelProps={{ shrink: true }}
             className={classes.list}
             onChange={handleChange}
