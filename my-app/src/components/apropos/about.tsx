@@ -46,7 +46,9 @@ const About = () => {
           <br />
           <br />
           <br />
-          <div>{data.data[0].attributes.description}</div>
+          <div style={{ textAlign: "justify" }}>
+            {data.data[0].attributes.description}
+          </div>
           <br />
           <br />
           <br />
@@ -58,7 +60,9 @@ const About = () => {
           <br />
           <br />
           <br />
-          <div>{data.data[0].attributes.description}</div>
+          <div style={{ textAlign: "justify" }}>
+            {data.data[0].attributes.description}
+          </div>
         </>
       ) : (
         <Loader />

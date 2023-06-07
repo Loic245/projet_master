@@ -6,6 +6,7 @@ export default class MatiereController {
 
     static createMatiere = async(req: Request, res: Response) => {
         const data = req.body;
+        console.log("req body :::::::::::",req.body)
         try {
             await Matiere.create({
                 ...data
@@ -30,7 +31,7 @@ export default class MatiereController {
     }
 
     static updateMatiere = async(req: Request, res: Response) => {
-        const data = req.body;
+        const data = req.body.data;
         try {
             await Matiere.updateOne({
                 _id : data._id
@@ -38,7 +39,7 @@ export default class MatiereController {
             {
                 $set: {
                     matiere : data.matiere,
-                code : data.code
+                    code : data.code
                 }
             });
 

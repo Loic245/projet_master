@@ -8,6 +8,8 @@ export interface MatiereInterface {
     getAllMatiere : () => void;
     niveauMatiere : any[];
     setNiveauMatiere : (data: any) => void;
+    updateMatiere : (data: any) => void;
+    deleteMatiere : (id: string) => void;
 }
 
 class MatiereStore implements MatiereInterface {
@@ -52,6 +54,27 @@ class MatiereStore implements MatiereInterface {
             await this.getAllMatiere()
         } catch (e: any) {
             console.log("Error on creating matiere :",e)
+        }
+    }
+
+    @action updateMatiere = async(data: any) => {
+        try {
+            const updated = await axios.patch(`${config.baseURL}/matiere`, {data})
+            if(updated.data) {
+                this.getAllMatiere()
+            }
+        } catch (e: any) {
+            console.log("cannot update this niveau")
+        }
+    }
+
+    @action deleteMatiere = async(id: string) => {
+        try {
+            await axios.delete(`${config.baseURL}/matiere/${id}`)
+
+            this.getAllMatiere();
+        } catch (e: any) {
+            console.log("cannot delete one niveau")
         }
     }
 

@@ -119,7 +119,7 @@ const Login = (props: any) => {
               Etablissement Scolaire XXX
             </h1>
           </center>
-          <label style={{ color: "white" }}>&nbsp; UserName</label>
+          <label style={{ color: "white" }}>&nbsp; Nom d'utilisateur</label>
           <br />
           <TextField
             variant="standard"

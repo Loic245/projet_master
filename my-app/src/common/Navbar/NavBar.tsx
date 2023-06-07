@@ -50,7 +50,7 @@ const NavBar = (props: any) => {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2, color: "#fff" }}
           ></IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <TemporaryDrawer />

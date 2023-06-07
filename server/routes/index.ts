@@ -6,7 +6,8 @@ import socket from './socket';
 import uploadFile from './uploadFile';
 import Communique from './communique';
 import Niveau from './niveau';
-import Matiere from './matiere'
+import Matiere from './matiere';
+import Message from './message';
 
 const routes = Router();
 
@@ -17,6 +18,7 @@ routes.use("/socket", socket);
 routes.use("/upload", uploadFile);
 routes.use('/communique', Communique);
 routes.use('/niveau', Niveau);
-routes.use('/matiere', Matiere)
+routes.use('/matiere', Matiere);
+routes.use('/message', Message);
 
 export default routes;

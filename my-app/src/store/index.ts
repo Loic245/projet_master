@@ -3,7 +3,9 @@ import rootStore from './rootStore';
 import authStore from './authStore';
 import communiqueStore from './communiqueStore';
 import niveauStore from './niveauStore';
-import matiereStore from './matiereStore'
+import matiereStore from './matiereStore';
+import parametreStore from './parametreStore';
+import messageStore from './messageStore';
 
 export {
     userStore,
@@ -12,4 +14,6 @@ export {
     communiqueStore,
     niveauStore,
     matiereStore,
+    parametreStore,
+    messageStore,
 }

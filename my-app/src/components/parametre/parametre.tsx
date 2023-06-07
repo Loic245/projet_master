@@ -1,13 +1,21 @@
 import { inject, observer } from "mobx-react";
 import { NiveauStoreInterface } from "../../store/niveauStore";
-import { Grid, Box, Button, TextField } from "@mui/material";
+import { Grid, Box, Button, TextField, Tab, Tabs } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { MatiereInterface } from "../../store/matiereStore";
+import TabPanel from "../../common/TabPanel";
+import { a11yProps } from "../../common/utils/function";
+import { ParametreInterface } from "../../store/parametreStore";
+import UpdateNiveau from "./updateDialog/updateNiveau";
+import CreateNewNiveau from "./createNew/createNewNiveau";
+import UpdateMatiere from "./updateDialog/updateMatiere";
+import CreateNewMatiere from "./createNew/createNewMatiere";
 
 interface IParametre {
   niveauStore: NiveauStoreInterface;
   matiereStore: MatiereInterface;
+  parametreStore: ParametreInterface;
 }
 
 interface INiveau {
@@ -31,7 +39,7 @@ const defaultNiveau: INiveau = {
 };
 
 const Parametre = (props: any) => {
-  const { niveauStore, matiereStore } = props as IParametre;
+  const { niveauStore, matiereStore, parametreStore } = props as IParametre;
   const columns: GridColDef[] = [
     {
       field: "code",
@@ -54,7 +62,7 @@ const Parametre = (props: any) => {
     {
       field: "matiere",
       headerName: "Matière",
-      width: 200,
+      width: 400,
     },
   ];
 
@@ -65,143 +73,166 @@ const Parametre = (props: any) => {
 
   const [niveau, setNiveau] = useState(defaultNiveau);
   const [matiere, setMatiere] = useState(defaultMatiere);
-  const [addNiveau, setAddNiveau] = useState(false);
-  const [addMatiere, setAddMatiere] = useState(false);
+  const [openNiveau, setOpenNiveau] = useState(false);
+  const [openMatiere, setOpenMatiere] = useState(false);
+  const [dataNiveau, setDataNiveau] = useState(defaultNiveau);
+  const [newNiveau, setNewNiveau] = useState(false);
+  const [newMatiere, setNewMatiere] = useState(false);
 
-  const handleNewNiveau = () => {
-    niveauStore.createNiveau(niveau);
-    setAddNiveau(!addNiveau);
+  const handleNewNiveau = async (data: any) => {
+    await niveauStore.createNiveau(data);
     setNiveau(defaultNiveau);
+    setNewNiveau(!newNiveau);
   };
 
-  const handleCreateMatiere = () => {
-    matiereStore.createMatiere(matiere);
-    setAddMatiere(!addMatiere);
+  const handleCreateMatiere = async (data: any) => {
+    await matiereStore.createMatiere(data);
     setMatiere(defaultMatiere);
-  };
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setNiveau({ ...niveau, [name]: value });
-  };
-
-  const handleChangeMatiere = (e: any) => {
-    const { name, value } = e.target;
-    setMatiere({ ...matiere, [name]: value });
+    setNewMatiere(!newMatiere);
   };
 
   const handleAddNiveau = () => {
-    setAddNiveau(!addNiveau);
+    setNewNiveau(!newNiveau);
+  };
+
+  const openNiveauDialog = (data: any) => {
+    setDataNiveau(data.row);
+    setOpenNiveau(true);
+  };
+
+  const openMatiereDialog = (data: any) => {
+    setMatiere(data.row);
+    setOpenMatiere(!openMatiere);
   };
 
   const handleAddMatiere = () => {
-    setAddMatiere(!addMatiere);
+    setNewMatiere(!newMatiere);
   };
 
-  console.log("niveauStore.listNiveau :", niveauStore.listNiveau);
+  const handleOpenTabs = (event: any, value: any) => {
+    parametreStore.setTabsValue(value);
+  };
+
+  const handleCloseNiveau = () => setOpenNiveau(false);
+  const handleCloseMatiere = () => setOpenMatiere(false);
+  const handleCloseNewNiveau = () => setNewNiveau(false);
+  const handleCloseNewMatiere = () => setNewMatiere(false);
 
   return (
-    <div>
-      <Box>
-        <Grid container sx={{ justifyContent: "space-around" }}>
-          <Grid item xs={12} sm={5} md={5} sx={{ height: 400 }}>
-            <DataGrid
-              rows={niveauStore.listNiveau}
-              columns={columns}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-            />
+    <Box sx={{ padding: "1rem" }}>
+      <Tabs
+        value={parametreStore?.tabsValue}
+        onChange={handleOpenTabs}
+        aria-label="basic tabs example"
+      >
+        <Tab label="Niveau" {...a11yProps(0)} />
+        <Tab label="Matiere" {...a11yProps(1)} />
+        <Tab label="Autres" {...a11yProps(2)} />
+      </Tabs>
+      <TabPanel value={parametreStore?.tabsValue} index={0}>
+        <Grid sx={{ height: 400 }}>
+          <Grid
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0 2rem",
+            }}
+          >
+            <h2>Liste des niveaux</h2>
             <Button
               variant="contained"
               color="primary"
               sx={{
                 textTransform: "none",
-                display: addNiveau ? "none" : "block",
               }}
               onClick={handleAddNiveau}
             >
-              {!addNiveau ? "Créer" : "Annuler"}
+              Créer
             </Button>
-            {addNiveau && (
-              <Grid>
-                <TextField
-                  label="Code"
-                  value={niveau.code}
-                  onChange={handleChange}
-                  required
-                  name="code"
-                  fullWidth
-                />
-                <TextField
-                  label="Niveau"
-                  value={niveau.niveau}
-                  onChange={handleChange}
-                  required
-                  name="niveau"
-                  fullWidth
-                />{" "}
-                <br />
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  sx={{ textTransform: "none" }}
-                  onClick={handleNewNiveau}
-                >
-                  Enregistrer
-                </Button>
-              </Grid>
-            )}
           </Grid>
+          <br />
+          <DataGrid
+            rows={niveauStore.listNiveau}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            onRowClick={openNiveauDialog}
+          />
 
-          <Grid item xs={12} sm={5} md={5} sx={{ height: 400 }}>
-            <DataGrid
-              rows={matiereStore.listMatiere}
-              columns={columnsMatiere}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-            />
+          <UpdateNiveau
+            data={dataNiveau}
+            open={openNiveau}
+            handleClose={handleCloseNiveau}
+          />
+
+          <CreateNewNiveau
+            open={newNiveau}
+            handleClose={handleCloseNewNiveau}
+            defaultData={niveau}
+            handleSubmit={handleNewNiveau}
+          />
+        </Grid>
+      </TabPanel>
+      <TabPanel value={parametreStore?.tabsValue} index={1}>
+        <Grid sx={{ height: 400 }}>
+          <Grid
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0 2rem",
+            }}
+          >
+            <h2>Liste des matières</h2>
             <Button
               variant="contained"
               color="primary"
-              sx={{ textTransform: "none" }}
+              sx={{
+                textTransform: "none",
+              }}
               onClick={handleAddMatiere}
             >
-              {!addMatiere ? "Créer" : "Annuler"}
+              Créer
             </Button>
-            {addMatiere && (
-              <Grid>
-                <TextField
-                  label="Code"
-                  value={matiere.code}
-                  onChange={handleChangeMatiere}
-                  required
-                  name="code"
-                  fullWidth
-                />
-                <TextField
-                  label="Matiere"
-                  value={matiere.matiere}
-                  onChange={handleChangeMatiere}
-                  required
-                  name="matiere"
-                  fullWidth
-                />{" "}
-                <br />
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  sx={{ textTransform: "none" }}
-                  onClick={handleCreateMatiere}
-                >
-                  Enregistrer
-                </Button>
-              </Grid>
-            )}
           </Grid>
+          <br />
+          <DataGrid
+            rows={matiereStore.listMatiere}
+            columns={columnsMatiere}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            onRowClick={openMatiereDialog}
+          />
+
+          <UpdateMatiere
+            data={matiere}
+            open={openMatiere}
+            handleClose={handleCloseMatiere}
+          />
+
+          <CreateNewMatiere
+            open={newMatiere}
+            handleClose={handleCloseNewMatiere}
+            defaultData={defaultMatiere}
+            handleSubmit={handleCreateMatiere}
+          />
         </Grid>
-      </Box>
-    </div>
+      </TabPanel>
+      <TabPanel value={parametreStore?.tabsValue} index={2}>
+        <DataGrid
+          rows={niveauStore.listNiveau}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+        />
+      </TabPanel>
+    </Box>
   );
 };
 
-export default inject("niveauStore", "matiereStore")(observer(Parametre));
+export default inject(
+  "niveauStore",
+  "matiereStore",
+  "parametreStore"
+)(observer(Parametre));

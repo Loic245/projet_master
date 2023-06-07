@@ -40,6 +40,9 @@ class NiveauStore implements NiveauStoreInterface {
     @action updateNiveau = async(data: any) => {
         try {
             const updated = await axios.patch(`${config.baseURL}/niveau`, {data})
+            if(updated.data) {
+                this.getNiveau()
+            }
         } catch (e: any) {
             console.log("cannot update this niveau")
         }
@@ -48,6 +51,8 @@ class NiveauStore implements NiveauStoreInterface {
     @action deleteNiveau = async(id: string) => {
         try {
             await axios.delete(`${config.baseURL}/niveau/${id}`)
+
+            this.getNiveau();
         } catch (e: any) {
             console.log("cannot delete one niveau")
         }

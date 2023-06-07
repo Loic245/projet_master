@@ -29,7 +29,7 @@ export default class NiveauController {
     }
 
     static updateNiveau = async(req: Request, res: Response) => {
-        const data = req.body;
+        const data = req.body.data;
         try {
             await Niveau.updateOne({
                 _id : data._id
