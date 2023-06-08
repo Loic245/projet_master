@@ -6,6 +6,7 @@ import { inject, observer } from "mobx-react";
 import moment from "moment";
 import { UserStoreInterface } from "../../store/userStore";
 import config from "../../config";
+import person from "../../assets/person_icon.png";
 
 interface IUser {
   userStore: UserStoreInterface;
@@ -26,7 +27,11 @@ const SideBar = (props: any) => {
         <Grid style={{ width: "100%" }}>
           <center>
             <img
-              src={`${config.baseGetFile}${userStore?.user?.image}`}
+              src={
+                userStore?.user?.image
+                  ? `${config.baseGetFile}${userStore?.user?.image}`
+                  : person
+              }
               alt="User Profile"
               style={{
                 width: "100px",

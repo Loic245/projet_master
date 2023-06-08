@@ -8,6 +8,7 @@ import Communique from './communique';
 import Niveau from './niveau';
 import Matiere from './matiere';
 import Message from './message';
+import Document from './document';
 
 const routes = Router();
 
@@ -20,5 +21,6 @@ routes.use('/communique', Communique);
 routes.use('/niveau', Niveau);
 routes.use('/matiere', Matiere);
 routes.use('/message', Message);
+routes.use('/document', Document);
 
 export default routes;

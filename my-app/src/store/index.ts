@@ -6,6 +6,7 @@ import niveauStore from './niveauStore';
 import matiereStore from './matiereStore';
 import parametreStore from './parametreStore';
 import messageStore from './messageStore';
+import documentStore from './documentStore';
 
 export {
     userStore,
@@ -16,4 +17,5 @@ export {
     matiereStore,
     parametreStore,
     messageStore,
+    documentStore,
 }

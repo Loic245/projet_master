@@ -21,6 +21,30 @@ const useStyles = makeStyles({
     text : {
         textAlign : 'center',
         fontWeight : 'bold',
+    },
+    padContainer : {
+        padding : '2rem'
+    },
+    btn : {
+        textDecoration : 'none',
+        textTransform : 'none',
+        backgroundColor : "#f50057 !important",
+    },
+    addFileContainer : {
+        display : 'flex',
+        gap : '2rem'
+    },
+    listFile : {
+        backgroundColor : '#e8e3e3',
+        display : "flex",
+        alignItems : 'center',
+        gap : '3rem',
+        padding : '0 1rem',
+        width : '50%'
+    },
+    aStyle : {
+        textDecoration : 'none',
+        color: "#000"
     }
   
   });
