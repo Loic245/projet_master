@@ -27,7 +27,7 @@ class MessageStore implements MessageStoreInterface {
 
     @action getAllMessage = async(matricule: string) => {
         try {
-            const result = await axios.get(`${config.baseURL}/message`, { data: matricule })
+            const result = await axios.get(`${config.baseURL}/message/${matricule}`)
             if(result.data) {
                 this.allMessage = result.data.message;
             }
@@ -38,7 +38,7 @@ class MessageStore implements MessageStoreInterface {
 
     @action getOneMessage = async(one: OneMessage) => {
         try {
-            const result = await axios.get(`${config.baseURL}/message/one`, { data: one })
+            const result = await axios.post(`${config.baseURL}/message/one`, { data: one })
             if(result.data) {
                 this.oneMessageData = result.data.message;
             }
@@ -49,10 +49,10 @@ class MessageStore implements MessageStoreInterface {
 
     @action newMessage = async(data: any) => {
         try {
-            const result = await axios.post(`${config.baseURL}/message`, { data })
+            const result = await axios.post(`${config.baseURL}/message`, data)
             if(result.data) {
                 this.getAllMessage(data.source)
-                this.getOneMessage({ source : data.souce, destinataire : data.destinataire})
+                this.getOneMessage({ source : data.source, destinataire : data.destinataire})
             }
         } catch (e: any) {
             console.log("Internal server error")

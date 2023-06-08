@@ -10,14 +10,6 @@ const { Server } = require("socket.io");
 const fs = require("file-system")
 
 
-// try {
-//   const path = '/uploads/communique/'
-//   const data = fs.readFileSync(`${__dirname}${path}check-1681922247920.png`);
-//   console.log(data);
-// } catch (err) {
-//   console.error("error on reading file",err);
-// }
-
 const app = express()
 
 const server = http.createServer(app)
@@ -33,13 +25,16 @@ const io = new Server(server, {
 io.on("connection" , (socket: any) => {
 
   socket.on("send_message_communique", async(data: any) => {
-    console.log("data:::::::::::",data)
 
     const result = await Communique.create({
       ...data
     })
 
     io.emit("receive_message_communique", data)
+  })
+
+  socket.on("send_message", async(data: any) => {
+    io.emit("receive_message", data)
   })
 })
 
@@ -52,10 +47,6 @@ mongoose.connect(`${baseURI}`)
     console.log("MongoDB Connected !");
   })
   .catch((err) => console.log(err));  
-
-// app.listen(3009, () => {
-//     console.log(`Server started on port 3009 !`);
-// });
 
 app.use(jsonParser);
 

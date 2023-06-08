@@ -11,11 +11,13 @@ const useStyles = makeStyles({
         display : 'flex',
         flexWrap : 'nowrap',
         marginBottom : '1rem',
-        gap : 5
+        gap : '0.5rem',
+        width : '100%',
+        overflowX : 'scroll',
     },
     userContainer : {
         width : '5rem',
-        overflow : 'hidden',
+        // overflow : 'hidden',
         textAlign : 'center',
         fontSize : '10px',
         paddingBottom : '0.5rem',
@@ -25,9 +27,9 @@ const useStyles = makeStyles({
     },
     listContainer : {
         display : "flex",
-        // alignItems: 'center',
+        alignItems: 'center',
         width : '90%',
-        gap : 5,
+        gap : '2rem',
         borderRadius : '0.2rem',
         padding : '0.5rem',
         backgroundColor : "#fff",
@@ -64,9 +66,7 @@ const useStyles = makeStyles({
         borderRadius : '8px 8px 0 8px',
         backgroundColor : '#8dc3e0',
         width : '80%',
-        position : 'relative',
-        right : '0 !important',
-        marginLeft : 0
+        marginLeft : '12%'
     },
     messageContainer : {
         height : '50vh',

@@ -7,8 +7,8 @@ import person from "../../assets/person_icon.png";
 import config from "../../config";
 import SendIcon from "@mui/icons-material/Send";
 import { MessageStoreInterface } from "../../store/messageStore";
-import users from "../users/users";
 import moment from "moment";
+import { socket } from "../../utils";
 
 interface IMessage {
   userStore: UserStoreInterface;
@@ -20,7 +20,7 @@ const Message = (props: any) => {
 
   useEffect(() => {
     userStore.getAllUser();
-    messageStore.getAllMessage(userStore.user.matricule);
+    messageStore.getAllMessage(`${userStore.user.matricule}`);
 
     // return () => {
     //   second
@@ -28,12 +28,26 @@ const Message = (props: any) => {
   }, []);
 
   useEffect(() => {
+    // afterEffectFunction();
+    messageStore.getAllMessage(`${userStore.user.matricule}`);
+    setAllMessage(
+      messageStore.allMessage.filter(
+        (k: any) => k.destinataire !== `${userStore.user.matricule}`
+      )
+    );
+  }, [userStore.user]);
+
+  useEffect(() => {
     const allUser = userStore.allUser.filter(
       (k: any) => k.matricule !== userStore.user.matricule
     );
     setUser(allUser);
 
-    setAllMessage(messageStore.allMessage);
+    setAllMessage(
+      messageStore.allMessage.filter(
+        (k: any) => k.destinataire !== `${userStore.user.matricule}`
+      )
+    );
     // return () => {
     //   setUser([]);
     // };
@@ -43,10 +57,27 @@ const Message = (props: any) => {
   const [oneUser, setOneUser] = useState<any>();
   const [allMessage, setAllMessage] = useState<any>();
   const [messageSend, setMessageSend] = useState<any>();
+  const [listDiscussion, setListDiscussion] = useState<any>();
+
+  useEffect(() => {
+    socket.on("receive_message", async (data: any) => {
+      await messageStore.getAllMessage(`${userStore.user.matricule}`);
+      await messageStore.getOneMessage({
+        source: data.source,
+        destinataire: data.destinataire,
+      });
+      setListDiscussion(messageStore.oneMessageData);
+    });
+  }, [socket]);
 
   const classes = useStyles();
 
-  const handleChooseUser = (matricule: string) => () => {
+  const handleChooseUser = (matricule: string) => async () => {
+    await messageStore.getOneMessage({
+      source: userStore.user.matricule,
+      destinataire: matricule,
+    });
+    setListDiscussion(messageStore.oneMessageData);
     const selected = user.filter((k: any) => k.matricule === matricule);
     if (selected) {
       setMessageSend({
@@ -75,6 +106,31 @@ const Message = (props: any) => {
       await messageStore.newMessage({
         data: { ...messageSend, message, date: moment().format("DD/MM/YYYY") },
       });
+
+      // set list discussion
+      await messageStore.getOneMessage({
+        source: userStore.user.matricule,
+        destinataire: messageSend.destinataire,
+      });
+      setListDiscussion(messageStore.oneMessageData);
+      // set list discussion
+
+      // set list message
+      await messageStore.getAllMessage(userStore.user.matricule);
+      setAllMessage(
+        messageStore.allMessage.filter(
+          (k: any) => k.destinataire !== `${userStore.user.matricule}`
+        )
+      );
+      // set list message
+
+      // socket configuration
+      socket.emit("send_message", {
+        ...messageSend,
+        message,
+        date: moment().format("DD/MM/YYYY"),
+      });
+      // socket configuration
       setMessage("");
     }
   };
@@ -86,10 +142,6 @@ const Message = (props: any) => {
   };
 
   console.log("allMessage :", allMessage);
-
-  const onlyText =
-    "Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussiadapté à la bureautique informatique";
-
   return (
     <Box className={classes.boxContainer}>
       <h2>Messages ...</h2>
@@ -116,125 +168,29 @@ const Message = (props: any) => {
 
       <Grid container>
         <Grid xs={12} sm={12} md={8} lg={8} className={classes.scrollComponent}>
-          <Grid
-            className={classes.listContainer}
-            onClick={handleChooseUser("002")}
-          >
-            <span className={classes.userListContainer}>
-              <img
-                src={
-                  userStore.user.image
-                    ? `${config.baseGetFile}${userStore.user.image}`
-                    : person
-                }
-                alt="profile_photo"
-                width={40}
-                height={40}
-              />
-              <p>{userStore.user.nom}</p>
-            </span>
-            <p style={{ float: "right" }}>{`${onlyText.substring(
-              0,
-              50
-            )} ...`}</p>
-          </Grid>
-
-          <Grid className={classes.listContainer}>
-            <span className={classes.userListContainer}>
-              <img
-                src={
-                  userStore.user.image
-                    ? `${config.baseGetFile}${userStore.user.image}`
-                    : person
-                }
-                alt="profile_photo"
-                width={40}
-                height={40}
-              />
-              <p>{userStore.user.nom}</p>
-            </span>
-            <p style={{ float: "right" }}>{`${onlyText.substring(
-              0,
-              50
-            )} ...`}</p>
-          </Grid>
-
-          <Grid className={classes.listContainer}>
-            <span className={classes.userListContainer}>
-              <img
-                src={
-                  userStore.user.image
-                    ? `${config.baseGetFile}${userStore.user.image}`
-                    : person
-                }
-                alt="profile_photo"
-                width={40}
-                height={40}
-              />
-              <p>{userStore.user.nom}</p>
-            </span>
-            <p style={{ float: "right" }}>{`${onlyText.substring(
-              0,
-              50
-            )} ...`}</p>
-          </Grid>
-          <Grid className={classes.listContainer}>
-            <span className={classes.userListContainer}>
-              <img
-                src={
-                  userStore.user.image
-                    ? `${config.baseGetFile}${userStore.user.image}`
-                    : person
-                }
-                alt="profile_photo"
-                width={40}
-                height={40}
-              />
-              <p>{userStore.user.nom}</p>
-            </span>
-            <p style={{ float: "right" }}>{`${onlyText.substring(
-              0,
-              50
-            )} ...`}</p>
-          </Grid>
-          <Grid className={classes.listContainer}>
-            <span className={classes.userListContainer}>
-              <img
-                src={
-                  userStore.user.image
-                    ? `${config.baseGetFile}${userStore.user.image}`
-                    : person
-                }
-                alt="profile_photo"
-                width={40}
-                height={40}
-              />
-              <p>{userStore.user.nom}</p>
-            </span>
-            <p style={{ float: "right" }}>{`${onlyText.substring(
-              0,
-              50
-            )} ...`}</p>
-          </Grid>
-          <Grid className={classes.listContainer}>
-            <span className={classes.userListContainer}>
-              <img
-                src={
-                  userStore.user.image
-                    ? `${config.baseGetFile}${userStore.user.image}`
-                    : person
-                }
-                alt="profile_photo"
-                width={40}
-                height={40}
-              />
-              <p>{userStore.user.nom}</p>
-            </span>
-            <p style={{ float: "right" }}>{`${onlyText.substring(
-              0,
-              50
-            )} ...`}</p>
-          </Grid>
+          {allMessage
+            ? allMessage.map((message: any) => (
+                <Grid
+                  className={classes.listContainer}
+                  onClick={handleChooseUser(message.destinataire)}
+                >
+                  <span>
+                    <img
+                      src={
+                        message.user[0].image
+                          ? `${config.baseGetFile}${message.user[0].image}`
+                          : person
+                      }
+                      alt="profile_photo"
+                      width={40}
+                      height={40}
+                    />
+                  </span>
+                  <p>{message.user[0].nom}</p>
+                  {/* <p>{`${message.message.substring(0, 50)} ...`}</p> */}
+                </Grid>
+              ))
+            : "text"}
         </Grid>
         <Grid xs={12} sm={12} md={4} lg={4}>
           {oneUser && (
@@ -257,13 +213,18 @@ const Message = (props: any) => {
                 </span>
                 <hr />
                 <Grid className={classes.messageContainer}>
-                  <p className={classes.localMessage}>some text</p>
-                  <p className={classes.localMessage}>some text</p>
-                  <p className={classes.messageTextInComing}>some text</p>
-                  <p className={classes.localMessage}>some text</p>
-                  <p className={classes.messageTextInComing}>some text</p>
-                  <p className={classes.localMessage}>some text</p>
-                  <p className={classes.messageTextInComing}>some text</p>
+                  {listDiscussion &&
+                    listDiscussion.map((text: any) => (
+                      <p
+                        className={
+                          text.user[0].matricule === userStore.user.matricule
+                            ? classes.messageTextInComing
+                            : classes.localMessage
+                        }
+                      >
+                        {text.message}
+                      </p>
+                    ))}
                 </Grid>
                 <hr />
                 <Grid container className={classes.sendBtn}>
