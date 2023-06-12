@@ -61,6 +61,10 @@ const StudentSchema: Schema = new Schema({
         type : String,
         required : true
     },
+    niveau : {
+        type: String,
+        required : true,
+    },
     createdAt: {
         type: Date,
         default: new Date(),

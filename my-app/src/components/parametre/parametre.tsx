@@ -1,6 +1,17 @@
 import { inject, observer } from "mobx-react";
 import { NiveauStoreInterface } from "../../store/niveauStore";
-import { Grid, Box, Button, TextField, Tab, Tabs } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Button,
+  TextField,
+  Tab,
+  Tabs,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { MatiereInterface } from "../../store/matiereStore";
@@ -11,11 +22,15 @@ import UpdateNiveau from "./updateDialog/updateNiveau";
 import CreateNewNiveau from "./createNew/createNewNiveau";
 import UpdateMatiere from "./updateDialog/updateMatiere";
 import CreateNewMatiere from "./createNew/createNewMatiere";
+import NewPeriode from "./newPeriode/newPeriode";
+import useStyles from "./style";
+import { IAutreInterface } from "../../store/autreStore";
 
 interface IParametre {
   niveauStore: NiveauStoreInterface;
   matiereStore: MatiereInterface;
   parametreStore: ParametreInterface;
+  autreStore: IAutreInterface;
 }
 
 interface INiveau {
@@ -39,7 +54,8 @@ const defaultNiveau: INiveau = {
 };
 
 const Parametre = (props: any) => {
-  const { niveauStore, matiereStore, parametreStore } = props as IParametre;
+  const { niveauStore, matiereStore, parametreStore, autreStore } =
+    props as IParametre;
   const columns: GridColDef[] = [
     {
       field: "code",
@@ -66,10 +82,49 @@ const Parametre = (props: any) => {
     },
   ];
 
+  const annee = [
+    "2020-2021",
+    "2021-2022",
+    "2022-2023",
+    "2023-2024",
+    "2024-2025",
+    "2025-2026",
+    "2026-2027",
+    "2027-2028",
+    "2028-2029",
+    "2029-2030",
+  ];
+
   useEffect(() => {
     niveauStore.getNiveau();
     matiereStore.getAllMatiere();
   }, [niveauStore, matiereStore]);
+
+  useEffect(() => {
+    const getAnnee = async () => {
+      await autreStore.getAnnee();
+      await autreStore.getData();
+    };
+    getAnnee();
+
+    // return () => {
+    //   second
+    // }
+  }, []);
+
+  useEffect(() => {
+    if (autreStore.annee) {
+      setAnneeEnCours(autreStore.annee);
+    }
+
+    if (autreStore.allData) {
+      setAllPeriode(autreStore.allData);
+    }
+
+    // return () => {
+    //   second
+    // }
+  }, [autreStore.annee, autreStore.allData]);
 
   const [niveau, setNiveau] = useState(defaultNiveau);
   const [matiere, setMatiere] = useState(defaultMatiere);
@@ -78,6 +133,12 @@ const Parametre = (props: any) => {
   const [dataNiveau, setDataNiveau] = useState(defaultNiveau);
   const [newNiveau, setNewNiveau] = useState(false);
   const [newMatiere, setNewMatiere] = useState(false);
+  const [anneeEnCours, setAnneeEnCours] = useState<any>();
+  const [openPeriode, setOpenPeriode] = useState(false);
+  const [periode, setPeriode] = useState<string[] | any[]>([]);
+  const [allperiode, setAllPeriode] = useState<any[]>([]);
+
+  const classes = useStyles();
 
   const handleNewNiveau = async (data: any) => {
     await niveauStore.createNiveau(data);
@@ -113,10 +174,36 @@ const Parametre = (props: any) => {
     parametreStore.setTabsValue(value);
   };
 
+  const handleChange = (e: any) => {
+    const { value } = e.target;
+    setAnneeEnCours({
+      ...anneeEnCours,
+      annee: value,
+    });
+  };
+
+  const handleAddPeriode = () => {
+    setOpenPeriode(true);
+  };
+
+  const handleNewPeriode = async (periodes: string) => {
+    // setPeriode([...periode, periodes]);
+    // const data = {
+    //   periode: [...periode, periodes],
+    // };
+    await autreStore.saveData(periodes);
+    handleClosePeriode();
+  };
+
+  const handleUpdateAnnee = async () => {
+    await autreStore.updateAnnee(anneeEnCours);
+  };
+
   const handleCloseNiveau = () => setOpenNiveau(false);
   const handleCloseMatiere = () => setOpenMatiere(false);
   const handleCloseNewNiveau = () => setNewNiveau(false);
   const handleCloseNewMatiere = () => setNewMatiere(false);
+  const handleClosePeriode = () => setOpenPeriode(false);
 
   return (
     <Box sx={{ padding: "1rem" }}>
@@ -220,11 +307,66 @@ const Parametre = (props: any) => {
         </Grid>
       </TabPanel>
       <TabPanel value={parametreStore?.tabsValue} index={2}>
-        <DataGrid
-          rows={niveauStore.listNiveau}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
+        <Grid className={classes.newPeriode}>
+          <h2>Année scolaire en cours</h2>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              textTransform: "none",
+            }}
+            onClick={handleUpdateAnnee}
+          >
+            Créer
+          </Button>
+        </Grid>
+        <hr />
+        {anneeEnCours && (
+          <FormControl variant="outlined" className={classes.yearWidth}>
+            {/* <InputLabel shrink={true}>Année scolaire</InputLabel> */}
+            <Select
+              name="sexe"
+              value={anneeEnCours.annee}
+              onChange={handleChange}
+            >
+              {annee.map((k: string) => (
+                <MenuItem value={k}>{k}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+        <br />
+        <br />
+        <hr />
+        <Grid className={classes.newPeriode}>
+          <h2>Période d'examen</h2>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              textTransform: "none",
+            }}
+            onClick={handleAddPeriode}
+          >
+            Créer
+          </Button>
+        </Grid>
+        {allperiode.length > 0 &&
+          allperiode?.map((k: any) => (
+            <table>
+              <tbody>
+                <tr>
+                  <td>{k.periode}</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          ))}
+
+        <NewPeriode
+          open={openPeriode}
+          handleClose={handleClosePeriode}
+          handleSubmit={handleNewPeriode}
         />
       </TabPanel>
     </Box>
@@ -234,5 +376,6 @@ const Parametre = (props: any) => {
 export default inject(
   "niveauStore",
   "matiereStore",
-  "parametreStore"
+  "parametreStore",
+  "autreStore"
 )(observer(Parametre));

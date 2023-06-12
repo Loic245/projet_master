@@ -7,6 +7,8 @@ import matiereStore from './matiereStore';
 import parametreStore from './parametreStore';
 import messageStore from './messageStore';
 import documentStore from './documentStore';
+import autreStore from './autreStore';
+import noteStore from './noteStore';
 
 export {
     userStore,
@@ -18,4 +20,6 @@ export {
     parametreStore,
     messageStore,
     documentStore,
+    autreStore,
+    noteStore,
 }

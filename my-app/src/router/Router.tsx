@@ -35,6 +35,8 @@ const Documents = lazy(() => import("../components/documents"));
 
 const Statistique = lazy(() => import("../components/statistique"));
 
+const Note = lazy(() => import("../components/note"));
+
 const Router = () => {
   return (
     <Routes>
@@ -174,6 +176,17 @@ const Router = () => {
           <Suspense fallback={<Loader />}>
             <Layout>
               <Documents />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/note"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Note />
             </Layout>
           </Suspense>
         }

@@ -47,5 +47,6 @@ export const defaultStudent: IEtudiant = {
     birthday: '',
     placeOfBirth: '',
     sexe: '',
+    niveau : '',
     lycee: defaultLycee,
 }

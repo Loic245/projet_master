@@ -9,6 +9,7 @@ import moment from "moment";
 import { inject, observer } from "mobx-react";
 import { DocumentStoreInterface } from "../../store/documentStore";
 import { UserStoreInterface } from "../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 const data = [
   "Condition d'utilisation",
@@ -120,8 +121,11 @@ const Documents = (props: any) => {
     });
   };
 
+  const history = useNavigate();
   const seeNote = () => {
-    alert("sometext");
+    if (userStore.user.role === "PROF") {
+      history("/note");
+    }
   };
 
   return (

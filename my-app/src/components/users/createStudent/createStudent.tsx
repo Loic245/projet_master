@@ -17,8 +17,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import config from "../../../config";
 import BackupIcon from "@mui/icons-material/Backup";
+import { inject, observer } from "mobx-react";
+import { NiveauStoreInterface } from "../../../store/niveauStore";
 
-const CreateStudent = () => {
+interface ICreateEtudiant {
+  niveauStore: NiveauStoreInterface;
+}
+
+const CreateStudent = (props: any) => {
+  const { niveauStore } = props as ICreateEtudiant;
+
   useEffect(() => {
     return () => {
       setData(defaultStudent);
@@ -33,6 +41,18 @@ const CreateStudent = () => {
   const [data, setData] = useState<IEtudiant>(defaultStudent);
   const [snack, setSnack] = useState<any>();
   const [lycee, setLycee] = useState<ILycee>(defaultLycee);
+  const [niveau, setNiveau] = useState<any[]>([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      await niveauStore.getNiveau();
+    };
+    getData()
+      .then(() => setNiveau(niveauStore.listNiveau))
+      .then(() =>
+        setData({ ...data, niveau: niveauStore.listNiveau[0]?.code })
+      );
+  }, []);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -47,16 +67,17 @@ const CreateStudent = () => {
   const handleSubmit = async () => {
     setData({ ...data, lycee: lycee });
     data.lycee = lycee;
-    if (selectedFile.length > 0) {
-      const newValue = await uploadFileFunction();
-      const result = await userStore.createStudent(newValue);
-      setSnack(result);
-    } else {
-      const result = await userStore.createStudent(data);
-      setSnack(result);
-    }
+    // if (selectedFile.length > 0) {
+    //   const newValue = await uploadFileFunction();
+    //   const result = await userStore.createStudent(newValue);
+    //   setSnack(result);
+    // } else {
+    //   const result = await userStore.createStudent(data);
+    //   setSnack(result);
+    // }
     history("/users");
   };
+  console.log("data :", data);
 
   const uploadFileFunction = async () => {
     const formData = new FormData();
@@ -132,6 +153,14 @@ const CreateStudent = () => {
 
   const handleback = () => {
     history("/users");
+  };
+
+  const [selectedNiveau, setSelectedNiveau] = useState();
+
+  const handleChangeNiveau = (e: any) => {
+    const { value } = e.target;
+    setSelectedNiveau(value);
+    setData({ ...data, niveau: value });
   };
 
   return (
@@ -331,6 +360,22 @@ const CreateStudent = () => {
           />
         </Grid>
 
+        {niveau && (
+          <Grid item={true} xs={4} sm={4} md={4} lg={4}>
+            <FormControl fullWidth={true}>
+              <InputLabel shrink={true}>Niveau</InputLabel>
+              <Select
+                value={selectedNiveau || niveau[0]?.code || ""}
+                onChange={handleChangeNiveau}
+              >
+                {niveau?.map((k: any) => (
+                  <MenuItem value={k.code}>{k.niveau}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
+
         {lycee.TechG === "Général" && (
           <Grid item={true} xs={4} sm={4} md={4} lg={4}>
             <TextField
@@ -376,4 +421,4 @@ const CreateStudent = () => {
   );
 };
 
-export default CreateStudent;
+export default inject("niveauStore")(observer(CreateStudent));

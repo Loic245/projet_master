@@ -49,6 +49,7 @@ export interface IEtudiant {
     lycee: ILycee;
     createdAt?: Date;
     image?: string;
+    niveau?: string;
 }
 
 export interface IRole {
