@@ -83,8 +83,9 @@ export default class UserController {
     static createAdmin = async(req: Request, res: Response) => {
         try {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
-            // AVYLW6XZS3 Administrateur
-            // P0Y3SLT3C7D Administratrice 
+            
+            // O6FWLBNZ2NJ Harvey
+            // J2GE2PKOA3 Targaryen
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 
             const TestIfData = await User.find()
@@ -226,9 +227,11 @@ export default class UserController {
     static createProf = async(req: Request, res: Response) => {
         try {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
-            // 4D4OD0CUK6P Professor
-            // 7YHI8Y51MW8 NewProf
-            // ILF9FPAN3AD Nouvelle
+            // X6QHDXXF66 Angele
+            // GGXDT4Q2T94 Shaun
+            // 8MV34J15H4 Quintana
+            // 3DMOGAXIMZB Rourke
+            // HW2WJHVZ8PL Zaria
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 
             const TestIfData = await User.find()
@@ -305,7 +308,18 @@ export default class UserController {
     static createStudent = async(req: Request, res: Response) => {
         try {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
-            // KG8507R76TJ Etudiante
+            
+            // Y8XJYKRO6PP Jon
+            // FWT8CF91L Lannister
+            // PIUDQRFICMQ Cersei
+            // 2XALH30ZQ4Y Stark
+            // DYIEVXFW8BJ Arya
+            // 9V8OI69IMJ Melisandre
+            // PA45NQJ3PQ Clifford
+            // CUYX9TSKA5 Roxie
+            // 70SQ8MM3DAU Cersei
+            // AL49SP7HPFH Ferrara
+
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 
             const TestIfData = await User.find()

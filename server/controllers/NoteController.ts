@@ -3,6 +3,7 @@ import { Note } from "../entity/note";
 import { Annee } from "../entity/annee";
 import { Niveau } from "../entity/niveau";
 import { Matiere } from '../entity/matiere';
+import { Autre } from "../entity/autre";
 
 export default class NoteController {
 
@@ -184,9 +185,6 @@ export default class NoteController {
         const niveau = req.body.niveau;
 
         try {
-            console.log("id :::::::",id)
-            console.log("niveau :::::::",niveau)
-            console.log("body :::::::",req.body)
             const result = await Note.aggregate([
                 {
                     $match : { etudiant : id, niveau : niveau }
@@ -194,8 +192,9 @@ export default class NoteController {
             ])
             const niveaux = await Niveau.find();
             const matiere = await Matiere.find();
+            const periode = await Autre.find();
 
-            res.status(200).send({ note : result, niveaux, matiere })
+            res.status(200).send({ note : result, niveaux, matiere, periode })
         } catch (e: any) {
             console.log("Internal server error !",e)
         }

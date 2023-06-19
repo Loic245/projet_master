@@ -22,23 +22,37 @@ const Head = (jsPDF: any, data: any, note: any) => {
   jsPDF.text(`: ${note.note[0].annee || ""}`, 135, 55);
 
   let yIndex = 100;
+  let xINdex = 90;
 
-  jsPDF.setFontSize(14);
-  jsPDF.setFont(undefined, "bold");
-  jsPDF.text("Notes", 170, 80);
+  for (let k = 0; k < note.periode?.length; k++) {
+    jsPDF.setFontSize(8);
+    jsPDF.setFont(undefined, "normal");
+    jsPDF.text(`${note.periode[k].periode}`, xINdex, 80);
+
+    xINdex += 18;
+  }
+
+  xINdex = 94;
 
   for (let i = 0; i < note.matiere?.length; i++) {
     jsPDF.setFontSize(10);
     jsPDF.setFont(undefined, "bold");
-    jsPDF.text(`${note.matiere[i].matiere}`, 20, yIndex);
+    jsPDF.text(`${note.matiere[i].matiere}`, 15, yIndex);
 
     for (let j = 0; j < note.note?.length; j++) {
       if (note.matiere[i].matiere === note.note[j].matiere) {
-        jsPDF.setFontSize(14);
-        jsPDF.setFont(undefined, "bold");
-        jsPDF.text(`${note.note[j].note}`, 170, yIndex);
+        for (let m = 0; m < note.periode?.length; m++) {
+          if (note.periode[m].periode === note.note[j].periode) {
+            jsPDF.setFontSize(8);
+            jsPDF.setFont(undefined, "normal");
+            jsPDF.text(`${note.note[j].note}`, xINdex, yIndex);
+
+            xINdex += 18;
+          }
+        }
       }
     }
+    xINdex = 94;
 
     yIndex += 10;
   }

@@ -225,6 +225,9 @@ const CreateProf = (props: any) => {
             fullWidth={true}
           />
         </Grid>
+      </Grid>
+
+      <Grid container={true} className={style.container} spacing={3}>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
           <FormControl fullWidth={true}>
             <InputLabel shrink={true}>Sexe</InputLabel>
@@ -234,9 +237,6 @@ const CreateProf = (props: any) => {
             </Select>
           </FormControl>
         </Grid>
-      </Grid>
-
-      <Grid container={true} className={style.container} spacing={3}>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
           <TextField
             label="Adresse"
@@ -270,6 +270,9 @@ const CreateProf = (props: any) => {
             fullWidth={true}
           />
         </Grid>
+      </Grid>
+
+      <Grid container={true} spacing={3}>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
           <TextField
             label="Lieu de naissance"
@@ -286,9 +289,6 @@ const CreateProf = (props: any) => {
             fullWidth={true}
           />
         </Grid>
-      </Grid>
-
-      <Grid container={true} spacing={3}>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
           <TextField
             label="CIN"
@@ -322,7 +322,9 @@ const CreateProf = (props: any) => {
           />
         </Grid>
         <Grid item={true} xs={4} sm={4} md={4} lg={4}>
-          <label onClick={handleOpenMatiere}> Matière </label>
+          <label onClick={handleOpenMatiere}>
+            <Button variant="contained">Ajouter Matière</Button>{" "}
+          </label>
         </Grid>
       </Grid>
       {matiereStore.niveauMatiere ? (

@@ -42,7 +42,7 @@ const Statistique = (props: any) => {
     return "red";
   };
 
-  const [note, setNote] = useState<any[]>([]);
+  const [note, setNote] = useState<Array<any>>([]);
   const [noteMaster, setNoteMaster] = useState<any[]>([]);
   const [periode, setPeriode] = useState<any[]>([]);
   const [selectedPeriode, setSelectedPeriode] = useState();
@@ -117,9 +117,9 @@ const Statistique = (props: any) => {
       max = Math.max(...maxNumber);
       min = Math.min(...minNumber);
       avg = (max + min) / 2;
-      totalCount = note
-        ?.map((k: any) => k.count)
-        .reduce((a: any, b: any) => +a + +b, 0);
+      totalCount = note.length
+        ? note?.map((k: any) => k.count).reduce((a: any, b: any) => +a + +b, 0)
+        : 0;
     }
     const newObject = {
       min,
@@ -150,9 +150,11 @@ const Statistique = (props: any) => {
       max = Math.max(...maxNumber);
       min = Math.min(...minNumber);
       avg = (max + min) / 2;
-      totalCount = noteMaster
-        .map((k: any) => k.count)
-        .reduce((a: any, b: any) => +a + +b, 0);
+      totalCount = noteMaster.length
+        ? noteMaster
+            ?.map((k: any) => k.count)
+            .reduce((a: any, b: any) => +a + +b, 0)
+        : 0;
     }
     const newObject = {
       min,
@@ -241,7 +243,7 @@ const Statistique = (props: any) => {
                         <u>Note moy : </u>
                         <b>
                           <span style={{ color: noteColor(data.avgNote) }}>
-                            {data.avgNote}
+                            {(+data.avgNote).toFixed(2)}
                           </span>
                         </b>
                       </li>
