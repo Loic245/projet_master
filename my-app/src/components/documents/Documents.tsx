@@ -1,5 +1,19 @@
 import folder from "../../assets/folder.png";
-import { Grid, Box, TextField, Button } from "@mui/material";
+import {
+  Grid,
+  Box,
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Alert,
+  Snackbar,
+} from "@mui/material";
 import useStyles from "./style";
 import { useEffect, useRef, useState } from "react";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -10,26 +24,19 @@ import { inject, observer } from "mobx-react";
 import { DocumentStoreInterface } from "../../store/documentStore";
 import { UserStoreInterface } from "../../store/userStore";
 import { useNavigate } from "react-router-dom";
-
-const data = [
-  "Condition d'utilisation",
-  "Guide d'utilisation de l'application",
-  "Lettre d'introduction",
-  "Règles de l'établissement",
-  "A propos de l'établissement",
-  "Calendrier de paiement de frais de scolarité",
-  "Calendrier d'examen",
-  "Emploi du temps",
-  "Note",
-];
+import { NiveauStoreInterface } from "../../store/niveauStore";
+import { NoteStoreInterface } from "../../store/noteStore";
 
 interface IDocument {
   documentStore: DocumentStoreInterface;
   userStore: UserStoreInterface;
+  niveauStore: NiveauStoreInterface;
+  noteStore: NoteStoreInterface;
 }
 
 const Documents = (props: any) => {
-  const { documentStore, userStore } = props as IDocument;
+  const { documentStore, userStore, niveauStore, noteStore } =
+    props as IDocument;
   const classes = useStyles();
 
   const hiddenFileInput = useRef<any>({});
@@ -40,6 +47,8 @@ const Documents = (props: any) => {
     };
     awaitFunction();
     setDocument(documentStore.allDocument);
+    niveauStore.getNiveau();
+    userStore.getOneUserData();
   }, []);
 
   useEffect(() => {
@@ -49,6 +58,14 @@ const Documents = (props: any) => {
   const [selectedFile, setSelectedFile] = useState<any>([]);
   const [fileNames, setFileNames] = useState("");
   const [document, setDocument] = useState<any>([]);
+  const [openNote, setOpenNote] = useState(false);
+  const [defaultNiveau, setDefaultNiveau] = useState(userStore.profil.niveau);
+  const [niveau, setNiveau] = useState([]);
+
+  useEffect(() => {
+    setNiveau(niveauStore?.listNiveau);
+    setDefaultNiveau(userStore.profil.niveau);
+  }, [niveauStore?.listNiveau, userStore.profil]);
 
   const handleClick = () => {
     if (selectedFile.length !== 0) {
@@ -122,10 +139,34 @@ const Documents = (props: any) => {
   };
 
   const history = useNavigate();
-  const seeNote = () => {
+  const seeNote = async () => {
     if (userStore.user.role === "PROF") {
       history("/note");
     }
+
+    if (userStore.user.role === "ETUDIANT") {
+      // await userStore.getOneUserData();
+      openDownloadNote();
+    }
+  };
+
+  const openDownloadNote = () => {
+    setOpenNote(true);
+  };
+
+  const handleChangeNiveau = (e: any) => {
+    setDefaultNiveau(e.target.value);
+  };
+
+  let niv;
+  const downloadNote = async () => {
+    // await userStore.getOneUserData();
+    await noteStore.getOneNote(
+      userStore.profil,
+      (niv = defaultNiveau ? defaultNiveau : userStore.profil.niveau)
+    );
+    setDefaultNiveau(userStore.profil.niveau);
+    setOpenNote(false);
   };
 
   return (
@@ -199,19 +240,63 @@ const Documents = (props: any) => {
                 </Grid>
               </a>
             ))}
-            <Grid className={classes.gridContent} onClick={seeNote}>
-              <center>
-                <img src={folder} alt="folder_icon" width={100} height={100} />
-              </center>
-              <p className={classes.text}>Note</p>
-            </Grid>
+            {userStore.user.role !== "ADMIN" && (
+              <Grid className={classes.gridContent} onClick={seeNote}>
+                <center>
+                  <img
+                    src={folder}
+                    alt="folder_icon"
+                    width={100}
+                    height={100}
+                  />
+                </center>
+                <p className={classes.text}>Note</p>
+              </Grid>
+            )}
           </>
         ) : (
           <></>
         )}
       </Grid>
+
+      <Dialog open={openNote} onClose={() => setOpenNote(false)} maxWidth="xs">
+        <DialogContent>
+          {niveau && (
+            <FormControl variant="standard" fullWidth={true}>
+              <InputLabel shrink={true}>Séléctionnez un niveau</InputLabel>
+              <Select
+                name="niveau"
+                value={defaultNiveau || userStore.profil.niveau}
+                onChange={handleChangeNiveau}
+              >
+                {niveau.map((k: any) => (
+                  <MenuItem value={`${k.code}`}>{k.niveau}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" color="primary" onClick={downloadNote}>
+            valider
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={noteStore.hasNote}
+        autoHideDuration={4000}
+        style={{ position: "absolute", left: "30%", right: "30%" }}
+      >
+        <Alert severity="error">il n'y a pas encore de note</Alert>
+      </Snackbar>
     </Box>
   );
 };
 
-export default inject("documentStore", "userStore")(observer(Documents));
+export default inject(
+  "documentStore",
+  "userStore",
+  "niveauStore",
+  "noteStore"
+)(observer(Documents));

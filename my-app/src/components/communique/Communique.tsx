@@ -18,13 +18,15 @@ import useStyles from "./style";
 import { inject, observer } from "mobx-react";
 import { CommuniqueStoreInterface } from "../../store/communiqueStore";
 import CommuniqueDialog from "./CommuniqueDialog";
+import { UserStoreInterface } from "../../store/userStore";
 
 interface IFrontCommunique {
   communiqueStore: CommuniqueStoreInterface;
+  userStore: UserStoreInterface;
 }
 
 const Communique = (props?: any) => {
-  const { communiqueStore } = props as IFrontCommunique;
+  const { communiqueStore, userStore } = props as IFrontCommunique;
   const hiddenFileInput = useRef<any>({});
   const classes = useStyles();
 
@@ -141,39 +143,41 @@ const Communique = (props?: any) => {
 
   return (
     <div>
-      <Grid container style={{ alignItems: "center" }}>
-        <Grid xs={6} sm={6} md={6} lg={6}>
-          <TextField
-            label="Entrez le message ..."
-            variant="standard"
-            value={message}
-            onChange={handleChange}
-            fullWidth
-          />
-        </Grid>
+      {userStore.user.role === "ADMIN" && (
+        <Grid container style={{ alignItems: "center" }}>
+          <Grid xs={6} sm={6} md={6} lg={6}>
+            <TextField
+              label="Entrez le message ..."
+              variant="standard"
+              value={message}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
 
-        <div>
-          <button
-            onClick={handleClick}
-            style={{
-              borderRadius: "3rem",
-              backgroundColor: "#d8d4d4",
-              border: "none",
-            }}
-          >
-            <AttachFileIcon />
-          </button>
-          <input
-            type="file"
-            onChange={handleFileChange}
-            ref={hiddenFileInput}
-            style={{ display: "none" }}
-          />
-        </div>
-        <Button onClick={sendMessage} title="Envoyer">
-          <SendIcon />
-        </Button>
-      </Grid>
+          <div>
+            <button
+              onClick={handleClick}
+              style={{
+                borderRadius: "3rem",
+                backgroundColor: "#d8d4d4",
+                border: "none",
+              }}
+            >
+              <AttachFileIcon />
+            </button>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              ref={hiddenFileInput}
+              style={{ display: "none" }}
+            />
+          </div>
+          <Button onClick={sendMessage} title="Envoyer">
+            <SendIcon />
+          </Button>
+        </Grid>
+      )}
       {selectedFile.length !== 0 && (
         <Grid className={classes.gridStyled}>
           {selectedFile.map((k: any) => (
@@ -252,4 +256,4 @@ const Communique = (props?: any) => {
   );
 };
 
-export default inject("communiqueStore")(observer(Communique));
+export default inject("communiqueStore", "userStore")(observer(Communique));

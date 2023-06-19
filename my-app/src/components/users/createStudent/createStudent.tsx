@@ -67,17 +67,16 @@ const CreateStudent = (props: any) => {
   const handleSubmit = async () => {
     setData({ ...data, lycee: lycee });
     data.lycee = lycee;
-    // if (selectedFile.length > 0) {
-    //   const newValue = await uploadFileFunction();
-    //   const result = await userStore.createStudent(newValue);
-    //   setSnack(result);
-    // } else {
-    //   const result = await userStore.createStudent(data);
-    //   setSnack(result);
-    // }
+    if (selectedFile.length > 0) {
+      const newValue = await uploadFileFunction();
+      const result = await userStore.createStudent(newValue);
+      setSnack(result);
+    } else {
+      const result = await userStore.createStudent(data);
+      setSnack(result);
+    }
     history("/users");
   };
-  console.log("data :", data);
 
   const uploadFileFunction = async () => {
     const formData = new FormData();

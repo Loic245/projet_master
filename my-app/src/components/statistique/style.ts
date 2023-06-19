@@ -32,6 +32,10 @@ const useStyles = makeStyles({
     },
     generalMaster : {
         borderLeft : 'solid 2px #000'
+    },
+    flexText : {
+        display : 'flex',
+        alignItems : 'center'
     }
   
   });

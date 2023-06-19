@@ -186,15 +186,39 @@ const Profil = (props: any) => {
             className={classes.list}
             onChange={handleChange}
           />
-          <TextField
-            variant="standard"
-            label="Adresse"
-            name={adresseExact}
-            value={profile?.adresseAdmin}
-            InputLabelProps={{ shrink: true }}
-            className={classes.list}
-            onChange={handleChange}
-          />
+          {userStore.user.role === "ADMIN" && (
+            <TextField
+              variant="standard"
+              label="Adresse"
+              name={adresseExact}
+              value={profile?.adresseAdmin}
+              InputLabelProps={{ shrink: true }}
+              className={classes.list}
+              onChange={handleChange}
+            />
+          )}
+          {userStore.user.role === "PROF" && (
+            <TextField
+              variant="standard"
+              label="Adresse"
+              name={adresseExact}
+              value={profile?.adresseProf}
+              InputLabelProps={{ shrink: true }}
+              className={classes.list}
+              onChange={handleChange}
+            />
+          )}
+          {userStore.user.role === "ETUDIANT" && (
+            <TextField
+              variant="standard"
+              label="Adresse"
+              name={adresseExact}
+              value={profile?.adresseEtu}
+              InputLabelProps={{ shrink: true }}
+              className={classes.list}
+              onChange={handleChange}
+            />
+          )}
           <TextField
             variant="standard"
             label="Date de naissance"

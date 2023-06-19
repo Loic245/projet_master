@@ -1,5 +1,6 @@
 import { Dialog, DialogActions, Button, DialogContent } from "@mui/material";
 import FileViewer from "react-file-viewer";
+import config from "../../config";
 
 interface ICommuniqueDialog {
   open: boolean;
@@ -19,6 +20,17 @@ const CommuniqueDialog = (props: any) => {
         <Button variant="contained" color="primary" onClick={handleClose}>
           Fermer
         </Button>
+        <a
+          href={`${path}`}
+          download={path}
+          // target="_blank"
+          rel="noreferrer"
+          // className={classes.aStyle}
+        >
+          <Button variant="contained" color="secondary" onClick={handleClose}>
+            Telecharger
+          </Button>
+        </a>
       </DialogActions>
     </Dialog>
   );

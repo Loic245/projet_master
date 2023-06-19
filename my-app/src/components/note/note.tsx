@@ -160,11 +160,10 @@ const Note = (props: any) => {
         prof: userStore.user.matricule,
         etudiant: listeEtudiant[i]._id,
         matiere: selecetedMatiere || nivPerProf[0]?.matiere,
-        note: listeEtudiant[i].note,
+        note: +listeEtudiant[i].note,
       };
       resultArray.push(dataSend);
     }
-    console.log("resultArray :", resultArray);
     await noteStore.saveNote(resultArray);
     errorFunction("Note ajouté avec succès !", "success");
   };

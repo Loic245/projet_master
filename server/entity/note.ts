@@ -5,7 +5,7 @@ interface INote {
     periode : String;
     annee : String;
     etudiant : String;
-    note : String;
+    note : Number;
     matiere : String;
     prof : String;
     niveau : String;
@@ -25,7 +25,7 @@ const NoteSchema: Schema = new Schema ({
         required : true
     },
     note: {
-        type: String,
+        type: Number,
         required : true
     },
     matiere: {

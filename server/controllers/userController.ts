@@ -228,6 +228,7 @@ export default class UserController {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
             // 4D4OD0CUK6P Professor
             // 7YHI8Y51MW8 NewProf
+            // ILF9FPAN3AD Nouvelle
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 
             const TestIfData = await User.find()
@@ -242,7 +243,6 @@ export default class UserController {
                 ...req.body,
                 matricule
             }
-            console.log("newData ::::::::::",newData)
 
             const result = await Professor.create(newData)
 
@@ -305,7 +305,6 @@ export default class UserController {
     static createStudent = async(req: Request, res: Response) => {
         try {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
-            // 2KQB182IDAJ Etudiant
             // KG8507R76TJ Etudiante
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 

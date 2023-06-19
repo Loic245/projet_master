@@ -76,6 +76,7 @@ const Login = (props: any) => {
     const result: any = await authStore.login(data);
     if (result) {
       redirect("/dashboard");
+      window.location.reload();
     } else {
       setOpen(true);
       setError("Utilisateur introuvable ou mot de passe incorrect !");
@@ -116,7 +117,7 @@ const Login = (props: any) => {
         <Grid xs={10} sm={10} md={10} lg={10}>
           <center>
             <h1 style={{ color: "yellow", fontFamily: "Georgia, sans-serif" }}>
-              Etablissement Scolaire XXX
+              Etablissement Scolaire
             </h1>
           </center>
           <label style={{ color: "white" }}>&nbsp; Nom d'utilisateur</label>

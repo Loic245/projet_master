@@ -25,7 +25,7 @@ class DocumentStore implements DocumentStoreInterface {
     @action getAllDocument = async() => {
         try {
             const result = await axios.get(`${config.baseURL}/document`);
-            console.log("result:",result)
+            
             if(result.data) {
                 this.allDocument = result.data.document;
             }
