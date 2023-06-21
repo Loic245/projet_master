@@ -37,6 +37,8 @@ const Statistique = lazy(() => import("../components/statistique"));
 
 const Note = lazy(() => import("../components/note"));
 
+const Gmail = lazy(() => import("../components/gmail"));
+
 const Router = () => {
   return (
     <Routes>
@@ -198,6 +200,17 @@ const Router = () => {
           <Suspense fallback={<Loader />}>
             <Layout>
               <Statistique />
+            </Layout>
+          </Suspense>
+        }
+      />
+
+      <Route
+        path="/mail"
+        element={
+          <Suspense fallback={<Loader />}>
+            <Layout>
+              <Gmail />
             </Layout>
           </Suspense>
         }

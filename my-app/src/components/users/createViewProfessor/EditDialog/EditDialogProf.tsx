@@ -158,19 +158,28 @@ const EditDialogProf = (props: any) => {
         </Grid>
       </DialogContent>
       <DialogActions style={{ display: "flex", justifyContent: "center" }}>
-        <Button variant="contained" color="default" onClick={deleteAction}>
-          Supprimer{" "}
+        <Button
+          variant="contained"
+          color="default"
+          onClick={deleteAction}
+          size="small"
+        >
           <DeleteIcon titleAccess="Supprimer" style={{ color: "#f50057" }} />
         </Button>
         <Button
           variant="contained"
           color="secondary"
           onClick={handleCloseDialogAdmin}
+          size="small"
         >
-          Annuler <CloseIcon titleAccess="Supprimer" />
+          <CloseIcon titleAccess="Supprimer" />
         </Button>
-        <Button variant="contained" color="primary" onClick={update}>
-          Enregistrer{" "}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={update}
+          size="small"
+        >
           <SaveIcon titleAccess="Enregistrer" style={{ color: "#ffffff" }} />
         </Button>
       </DialogActions>

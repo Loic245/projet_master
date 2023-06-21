@@ -9,6 +9,7 @@ import messageStore from './messageStore';
 import documentStore from './documentStore';
 import autreStore from './autreStore';
 import noteStore from './noteStore';
+import notificationStore from './notification';
 
 export {
     userStore,
@@ -22,4 +23,5 @@ export {
     documentStore,
     autreStore,
     noteStore,
+    notificationStore
 }

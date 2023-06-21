@@ -5,6 +5,7 @@ import useStyles from "./style";
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import { Grid, TextField, Button } from "@material-ui/core";
+import { Alert } from "@mui/material";
 import axios from "axios";
 
 interface IProfil {
@@ -17,6 +18,8 @@ const Profil = (props: any) => {
   const [selectedFile, setSelectedFile] = useState<any>([]);
   const [viewImage, setViewImage] = useState<any>();
   const [profile, setProfile] = useState<any>();
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (userStore.profil) {
@@ -57,6 +60,12 @@ const Profil = (props: any) => {
     setSelectedFile([]);
     setProfile({ ...newData, password: "" });
     e.preventDefault();
+    setShowAlert(true);
+    setMessage("Modification réussie avec succès");
+    setTimeout(() => {
+      setShowAlert(false);
+      setMessage("");
+    }, 3000);
   };
 
   const handleChange = (e: any) => {
@@ -254,6 +263,14 @@ const Profil = (props: any) => {
           />
         </Grid>
       </div>
+      <br /> <br /> <br />
+      {showAlert && (
+        <center>
+          <Alert severity="success" style={{ width: "400px" }}>
+            {message}
+          </Alert>
+        </center>
+      )}
     </div>
   );
 };

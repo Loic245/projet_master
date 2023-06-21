@@ -13,15 +13,18 @@ import { authStoreInterface } from "../../store/authStore";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import EmailIcon from "@mui/icons-material/Email";
+import AttachEmailIcon from "@mui/icons-material/AttachEmail";
 import io from "socket.io-client";
 import TemporaryDrawer from "./Menu";
+import { UserStoreInterface } from "../../store/userStore";
 
 interface INavbar {
   authStore?: authStoreInterface;
+  userStore: UserStoreInterface;
 }
 
 const NavBar = (props: any) => {
-  const { authStore } = props as INavbar;
+  const { authStore, userStore } = props as INavbar;
 
   const socket = io("http://localhost:3009");
 
@@ -58,9 +61,20 @@ const NavBar = (props: any) => {
               <HomeIcon /> &nbsp; Home
             </Button> */}
           </Typography>
+          {userStore.user.role === "ADMIN" && (
+            <Button title="Gmail" onClick={redirect("/mail")}>
+              <Badge
+                badgeContent={0}
+                color="error"
+                style={{ margin: "0 1rem", cursor: "pointer" }}
+              >
+                <AttachEmailIcon style={{ color: "#fff" }} />
+              </Badge>
+            </Button>
+          )}
           <Button title="Message" onClick={redirect("/message")}>
             <Badge
-              badgeContent={3}
+              badgeContent={0}
               color="error"
               style={{ margin: "0 1rem", cursor: "pointer" }}
             >
@@ -69,7 +83,7 @@ const NavBar = (props: any) => {
           </Button>
           <Button title="Notification(s)" onClick={redirect("/notification")}>
             <Badge
-              badgeContent={3}
+              badgeContent={0}
               color="error"
               style={{ margin: "0 1rem", cursor: "pointer" }}
             >
@@ -95,4 +109,4 @@ const NavBar = (props: any) => {
   );
 };
 
-export default inject("authStore")(observer(NavBar));
+export default inject("authStore", "userStore")(observer(NavBar));

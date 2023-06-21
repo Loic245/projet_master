@@ -9,11 +9,13 @@ import {
   FormControl,
   Alert,
   Snackbar,
+  ListItemButton,
 } from "@mui/material";
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, List, Collapse } from "@material-ui/core";
 import { IEtudiant, ILycee } from "../../../../common/Interfaces";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
+import NoteIcon from "@mui/icons-material/Note";
 import CloseIcon from "@mui/icons-material/Close";
 import { inject, observer } from "mobx-react";
 import moment from "moment";
@@ -54,10 +56,17 @@ const EditDialogStudent = (props: any) => {
   const [openNote, setOpenNote] = useState(false);
   const [defaultNiveau, setDefaultNiveau] = useState(currentData.niveau);
   const [niveau, setNiveau] = useState([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setNiveau(niveauStore?.listNiveau);
   }, [niveauStore?.listNiveau]);
+
+  useEffect(() => {
+    return () => {
+      setOpen(false);
+    };
+  }, []);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -104,6 +113,10 @@ const EditDialogStudent = (props: any) => {
     setDefaultNiveau(e.target.value);
   };
 
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
     <>
       <Dialog
@@ -111,16 +124,22 @@ const EditDialogStudent = (props: any) => {
         onClose={handleCloseDialogAdmin}
         maxWidth="xs"
       >
-        <DialogTitle id="alert-dialog-title" color="primary">
-          Etudiant
-          <Button
-            variant="contained"
-            color="primary"
+        <DialogTitle
+          id="alert-dialog-title"
+          color="primary"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <p>Etudiant</p>
+
+          <NoteIcon
+            titleAccess="Télécharger une note"
+            style={{ color: "#00f" }}
             onClick={openDownloadNote}
-          >
-            Imprimer{" "}
-            <SaveIcon titleAccess="Enregistrer" style={{ color: "#ffffff" }} />
-          </Button>
+          />
         </DialogTitle>
         <DialogContent>
           <center>
@@ -238,19 +257,28 @@ const EditDialogStudent = (props: any) => {
           )}
         </DialogContent>
         <DialogActions style={{ display: "flex", justifyContent: "center" }}>
-          <Button variant="contained" color="default" onClick={deleteAction}>
-            Supprimer{" "}
+          <Button
+            variant="contained"
+            color="default"
+            onClick={deleteAction}
+            size="small"
+          >
             <DeleteIcon titleAccess="Supprimer" style={{ color: "#f50057" }} />
           </Button>
           <Button
             variant="contained"
             color="secondary"
             onClick={handleCloseDialogAdmin}
+            size="small"
           >
-            Annuler <CloseIcon titleAccess="Supprimer" />
+            <CloseIcon titleAccess="Supprimer" />
           </Button>
-          <Button variant="contained" color="primary" onClick={update}>
-            Enregistrer{" "}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={update}
+            size="small"
+          >
             <SaveIcon titleAccess="Enregistrer" style={{ color: "#ffffff" }} />
           </Button>
         </DialogActions>

@@ -15,13 +15,14 @@ const welcomeMessage = (data: string, mdp: string) => {
     <html lang=fr>
     
     <head>
-        Bonjour Mr/Mme ${data},</br>
+        Bonjour Mr/Mme ${data},<br />
 
         Nous sommes heureux de vous compter parmi nous. </br></br>
     </head>
     
     <body>
-    Votre mot de passe pour accéder à la plateforme est : ${mdp}. </br></br>
+    Votre Nom d'utilisateur pour accéder à la plateforme est : ${data} <br />
+    Votre mot de passe pour accéder à la plateforme est : ${mdp}. <br /><br />
     Bonne navigation.
     </body>
     
@@ -84,7 +85,7 @@ export default class UserController {
         try {
             const defaultPassword = Math.random().toString(36).slice(2).toUpperCase()
             
-            // O6FWLBNZ2NJ Harvey
+            // O6FWLBNZ2NJ Harvey 
             // J2GE2PKOA3 Targaryen
             const hashedPassword = bcrypt.hashSync(`${defaultPassword}`, 10)
 
@@ -112,22 +113,22 @@ export default class UserController {
 
             const transporter = nodemailer.createTransport(mailConfig);
 
-            // const dataMail: IMailtext = {
-            //     from : 'rakotoarintsifaloic@gmail.com',
-            //     to : 'bradjack24ricks@gmail.com',
-            //     mdp : defaultPassword,
-            //     client : `${req.body.nomAdmin}`,
-            //     message: welcomeMessage(req.body.nomAdmin, `${defaultPassword}`)
-            // }
+            const dataMail: IMailtext = {
+                from : 'bradjack24ricks@gmail.com',
+                to : `${req.body.mail}`,
+                mdp : defaultPassword,
+                client : `${req.body.nomAdmin}`,
+                message: welcomeMessage(req.body.nomAdmin, `${defaultPassword}`)
+            }
 
-            // await transporter.sendMail(MailText(dataMail), function (error: any, info: any) {
-            //     if (error) {
-            //         console.log(error);
-            //         return res.status(500).send('error in send mail to new user !')
-            //     } else {
-            //       console.log("Email sent: " + info.response);
-            //     }
-            //   });
+            await transporter.sendMail(MailText(dataMail), function (error: any, info: any) {
+                if (error) {
+                    console.log(error);
+                    return res.status(500).send('error in send mail to new user !')
+                } else {
+                  console.log("Email sent: " + info.response);
+                }
+              });
 
             res.status(200).send(result)
         } catch (e: any) {
@@ -261,6 +262,25 @@ export default class UserController {
                 createdAt : new Date()
             })
 
+            const transporter = nodemailer.createTransport(mailConfig);
+
+            const dataMail: IMailtext = {
+                from : 'bradjack24ricks@gmail.com',
+                to : `${req.body.mail}`,
+                mdp : defaultPassword,
+                client : `${req.body.nomProf}`,
+                message: welcomeMessage(req.body.nomProf, `${defaultPassword}`)
+            }
+
+            await transporter.sendMail(MailText(dataMail), function (error: any, info: any) {
+                if (error) {
+                    console.log(error);
+                    return res.status(500).send('error in send mail to new user !')
+                } else {
+                  console.log("Email sent: " + info.response);
+                }
+              });
+
             res.status(200).send(result)
         } catch (e: any) {
             res.status(500).send({message: "error on grabind data !", error : e})
@@ -347,6 +367,25 @@ export default class UserController {
             } catch( e: any) {
                 console.log("error :::",e)
             }
+
+            const transporter = nodemailer.createTransport(mailConfig);
+
+            const dataMail: IMailtext = {
+                from : 'bradjack24ricks@gmail.com',
+                to : `${req.body.mail}`,
+                mdp : defaultPassword,
+                client : `${req.body.nomEtu}`,
+                message: welcomeMessage(req.body.nomEtu, `${defaultPassword}`)
+            }
+
+            await transporter.sendMail(MailText(dataMail), function (error: any, info: any) {
+                if (error) {
+                    console.log(error);
+                    return res.status(500).send('error in send mail to new user !')
+                } else {
+                  console.log("Email sent: " + info.response);
+                }
+              });
 
             res.status(200).send(result)
         }catch (e: any) {

@@ -4,6 +4,9 @@ import { Annee } from "../entity/annee";
 import { Niveau } from "../entity/niveau";
 import { Matiere } from '../entity/matiere';
 import { Autre } from "../entity/autre";
+import { Notification } from "../entity/notification";
+import { Professor } from "../entity/professor";
+import moment from "moment"
 
 export default class NoteController {
 
@@ -12,6 +15,15 @@ export default class NoteController {
             for (let i = 0; i < req.body.length; i++) {
                 await Note.create({...req.body[i]})
             }
+
+            const prof = await Professor.findOne({ matricule : req.body[0].prof })
+
+            const sexe = prof?.sexe === 'Homme' ? "Mr" : 'Mme';
+            await Notification.create({
+                message : `${sexe} ${prof?.nomProf} a ajouté les notes pour la matière ${req.body[0].matiere} pour ${req.body[0].periode} pour les ${req.body[0].niveau}`,
+                date : `${moment().format("DD/MM/YYYY")}`,
+                vue : 1
+            })
 
             res.status(200).send("note added successfully !")
         } catch (e: any) {

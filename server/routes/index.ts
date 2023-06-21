@@ -11,6 +11,7 @@ import Message from './message';
 import Document from './document';
 import Autre from './autre';
 import Note from './note';
+import Notification from "./notification";
 
 const routes = Router();
 
@@ -25,6 +26,7 @@ routes.use('/matiere', Matiere);
 routes.use('/message', Message);
 routes.use('/document', Document);
 routes.use('/autre', Autre);
-routes.use('/note', Note)
+routes.use('/note', Note);
+routes.use("/notification", Notification);
 
 export default routes;
